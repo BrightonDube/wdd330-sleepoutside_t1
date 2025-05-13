@@ -1,17 +1,18 @@
-import { setLocalStorage } from "./utils.mjs";
+import { setLocalStorage, getLocalStorage, getParam } from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
 
 const dataSource = new ProductData("tents");
-
 const productId = getParam("product");
 
-// Fetch and log the product data
-dataSource.findProductById(productId).then(product => {
-  console.log(product);
-});
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const product = urlParams.get("product");
+// Fetch the product data and render it
+dataSource.findProductById(productId).then((product) => {
+  if (product) {
+    // Render product details here if needed
+    console.log(product);
+  } else {
+    console.error("Product not found");
+  }
+}).catch(err => console.error("Error loading product:", err));
 
 function addProductToCart(productItem) {
   // Get the current cart from localStorage
@@ -23,15 +24,19 @@ function addProductToCart(productItem) {
   }
 
   // Add the product to the cart
-  cart.push(product);
+  cart.push(productItem);
 
   // Save the updated cart back to localStorage
-  setLocalStorage("so-cart", cartItem);
+  setLocalStorage("so-cart", cart);
 }
 // add to cart button event handler
 async function addToCartHandler(e) {
-  const productItem = await dataSource.findProductById(e.target.dataset.id);
-  addProductToCart(productItem);
+  try {
+    const productItem = await dataSource.findProductById(e.target.dataset.id);
+    addProductToCart(productItem);
+  } catch (err) {
+    console.error("Error adding to cart:", err);
+  }
 }
 
 // add listener to Add to Cart button
