@@ -14,9 +14,8 @@ export default class ProductDetails {
     if (this.product) {
       this.renderProductDetails();
       // Add event listener to Add to Cart button
-      document.getElementById("addToCart").addEventListener("click", () => {
-        this.addProductToCart();
-      });
+      document.getElementById("addToCart")
+        .addEventListener("click", this.addProductToCart.bind(this));
     } else {
       document.querySelector("#product-detail").innerHTML = 
         `<p>Product not found. Please check the URL and try again.</p>`;
