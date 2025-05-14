@@ -16,10 +16,10 @@ export default class ProductList {
     }
     async init() {
         const list = await this.dataSource.getData();
-        return list;
+        this.renderList(list)
     }
     renderList(data) {
         const newList = data.map((item) => productCardTemplate(item));
-        document.querySelector(".product-list").innerHTML = newList.join("");
+        this.listElement.innerHTML = newList.join("");
     }
 }
