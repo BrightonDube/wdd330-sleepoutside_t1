@@ -6,8 +6,14 @@ function updateCartCount() {
   const cartCountElem = document.getElementById("cart-count");
   if (cartCountElem) {
     cartCountElem.textContent = count > 0 ? count : "";
+    cartCountElem.style.background = "#8A470C";
+    cartCountElem.style.color = "#fff";
+    cartCountElem.style.display = count > 0 ? "inline-block" : "none";
   }
 }
+
+// Ensure badge is updated on page load
+window.addEventListener("DOMContentLoaded", updateCartCount);
 
 function renderCartContents() {
   // Get cart items from localStorage
@@ -31,8 +37,8 @@ function renderCartContents() {
 }
 
 function cartItemTemplate(item) {
-  const newItem = `<li class="cart-card divider" style="position:relative; display:flex; align-items:center; justify-content:space-between;">
-    <div style="display:flex; align-items:center; gap:1em;">
+  const newItem = `<li class="cart-card divider">
+    <div class="cart-card__main">
       <a href="#" class="cart-card__image">
         <img
           src="${item.Image}"
@@ -48,8 +54,8 @@ function cartItemTemplate(item) {
         <p class="cart-card__price">$${item.FinalPrice}</p>
       </div>
     </div>
-    <button class="remove-from-cart" data-id="${item.Id}" title="Remove from cart" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 0.5em;">
-      <img src="/images/bin.svg" alt="Remove" style="width:20px;height:20px;vertical-align:middle;" />
+    <button class="remove-from-cart" data-id="${item.Id}" title="Remove from cart">
+      <img src="/images/bin.svg" alt="Remove" />
     </button>
   </li>`;
   return newItem;

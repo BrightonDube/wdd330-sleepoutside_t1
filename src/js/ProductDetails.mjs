@@ -41,15 +41,21 @@ export default class ProductDetails {
     cart.push(this.product);
     setLocalStorage("so-cart", cart);
     updateCartCount();
+    // Visual feedback: animate badge
+    const cartCountElem = document.getElementById("cart-count");
+    if (cartCountElem) {
+      cartCountElem.classList.add("cart-bounce");
+      setTimeout(() => cartCountElem.classList.remove("cart-bounce"), 400);
+    }
   }
 
   renderProductDetails() {
     document.title = `Sleep Outside | ${this.product.Name}`;
 
     // Log the image path to debug
-    console.log(
-      `Product: ${this.product.Name}, Image path: ${this.product.Image}`,
-    );
+    // console.log(
+    //   `Product: ${this.product.Name}, Image path: ${this.product.Image}`,
+    // );
 
     // Fix the image path for the public directory
     const imagePath = this.product.Image.replace("../images", "/images");

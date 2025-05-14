@@ -9,6 +9,9 @@ function updateCartCount() {
   const cartCountElem = document.getElementById("cart-count");
   if (cartCountElem) {
     cartCountElem.textContent = count > 0 ? count : "";
+    cartCountElem.style.background = "#8A470C";
+    cartCountElem.style.color = "#fff";
+    cartCountElem.style.display = count > 0 ? "inline-block" : "none";
   }
 }
 
