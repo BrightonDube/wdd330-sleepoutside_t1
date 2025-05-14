@@ -1,3 +1,20 @@
+import { renderListWithTemplate } from "./utils.mjs";
+
+// Product card template function
+function productCardTemplate(product) {
+  return `<li class="product-card divider">
+    <a href="product_pages/index.html?product=${product.Id}">
+      <img
+        src="${product.Image}"
+        alt="${product.Name}"
+      />
+      <h2 class="card__name">${product.NameWithoutBrand}</h2>
+      <p class="card__brand">${product.Brand.Name}</p>
+      <p class="product-card__price">$${product.FinalPrice}</p>
+    </a>
+  </li>`;
+}
+
 export default class ProductList {
   constructor(category, dataSource, listElement) {
     this.category = category;
@@ -13,23 +30,13 @@ export default class ProductList {
   }
 
   renderList(list) {
-    // Create HTML for each item in the list
-    const htmlItems = list.map((product) => this.renderProduct(product));
-    // Insert the HTML into the listElement
-    this.listElement.innerHTML = htmlItems.join("");
-  }
-
-  renderProduct(product) {
-    return `<li class="product-card divider">
-            <a href="product_pages/index.html?product=${product.Id}">
-                <img
-                    src="${product.Image}"
-                    alt="${product.Name}"
-                />
-                <h2 class="card__name">${product.NameWithoutBrand}</h2>
-                <p class="card__brand">${product.Brand.Name}</p>
-                <p class="product-card__price">$${product.FinalPrice}</p>
-            </a>
-        </li>`;
+    // Use the utility function to render the list
+    renderListWithTemplate(
+      productCardTemplate,
+      this.listElement,
+      list,
+      "afterbegin",
+      true
+    );
   }
 }
