@@ -314,7 +314,15 @@ button {
   filter: invert(19%) sepia(67%) saturate(1162%) hue-rotate(7deg)
     brightness(97%) contrast(97%);
 }
-
+.cart-footer{
+  display: flex;
+  justify-content: flex-end;
+  margin: 20px
+}
+.cart-total{
+  font-size: 25px;
+  margin-right: 80px;
+}
 @media screen and (min-width: 500px) {
   body {
     max-width: 1080px;

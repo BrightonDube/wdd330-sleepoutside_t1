@@ -11,7 +11,13 @@ function updateCartCount() {
     cartCountElem.style.display = count > 0 ? "inline-block" : "none";
   }
 }
-
+function totalPrice(cartList) {
+  let total = 0;
+  cartList.forEach(item => {
+    total += item.ListPrice;
+  })
+  document.querySelector(".cart-total").innerHTML = `<strong>Total: </strong>$${total}`
+}
 // Ensure badge is updated on page load
 window.addEventListener("DOMContentLoaded", updateCartCount);
 
@@ -23,6 +29,12 @@ function renderCartContents() {
   if (cartItems && Array.isArray(cartItems)) {
     const htmlItems = cartItems.map((item) => cartItemTemplate(item));
     document.querySelector(".product-list").innerHTML = htmlItems.join("");
+    // Calculate and show the total price or show a message 
+    if (cartItems.length > 0) {
+      totalPrice(cartItems);
+    } else {
+      document.querySelector(".cart-total").innerHTML = `Your Cart is empty`
+    }
     // Add event listeners to all remove buttons
     document.querySelectorAll(".remove-from-cart").forEach((btn) => {
       btn.addEventListener("click", function () {
