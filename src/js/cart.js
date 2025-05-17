@@ -29,7 +29,7 @@ function renderCartContents() {
   if (cartItems && Array.isArray(cartItems)) {
     const htmlItems = cartItems.map((item) => cartItemTemplate(item));
     document.querySelector(".product-list").innerHTML = htmlItems.join("");
-    // Calculate and show the total price
+    // Calculate and show the total price or show a message 
     if (cartItems.length > 0) {
       totalPrice(cartItems);
     } else {
