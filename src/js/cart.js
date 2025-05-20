@@ -1,4 +1,4 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage, loadHeaderFooter } from "./utils.mjs";
 
 function updateCartCount() {
   const cart = getLocalStorage("so-cart");
@@ -87,3 +87,4 @@ function removeFromCart(id) {
 }
 
 renderCartContents();
+loadHeaderFooter();

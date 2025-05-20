@@ -1,7 +1,7 @@
 // Import ProductData module
 import ProductData from "./ProductData.mjs";
 import ProductList from "./ProductList.mjs";
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage, loadHeaderFooter } from "./utils.mjs";
 
 function updateCartCount() {
   const cart = getLocalStorage("so-cart");
@@ -24,3 +24,4 @@ const productList = new ProductList("tents", productData, listElement);
 productList.init();
 // Call updateCartCount after DOM is loaded
 window.addEventListener("DOMContentLoaded", updateCartCount);
+loadHeaderFooter()
