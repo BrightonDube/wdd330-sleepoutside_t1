@@ -31,7 +31,7 @@ export function renderListWithTemplate(
   parentElement,
   list,
   position = "afterbegin",
-  clear = false
+  clear = false,
 ) {
   if (clear) {
     parentElement.innerHTML = "";
@@ -42,17 +42,21 @@ export function renderListWithTemplate(
 export function renderWithTemplate(template, parentElement, data, callback) {
   parentElement.innerHTML = template;
   if (callback) {
-    callback(data)
+    callback(data);
   }
 }
-export async function loadTemplate(path){
+export async function loadTemplate(path) {
   const response = await fetch(path);
   const template = await response.text();
-  return template
+  return template;
 }
-export function loadHeaderFooter(){
-  const headerTemplate = loadTemplate("../partials/header.html");
-  const footerTemplate = loadTemplate("../partials/footer.html");
-  renderWithTemplate(headerTemplate);
-  renderListWithTemplate(footerTemplate);
+export async function loadHeaderFooter() {
+  const headerTemplate = await loadTemplate("../partials/header.html");
+  const footerTemplate = await loadTemplate("../partials/footer.html");
+  const headerElement =
+    document.getElementById("main-header") || document.getElementById("header");
+  const footerElement =
+    document.getElementById("main-footer") || document.getElementById("footer");
+  if (headerElement) renderWithTemplate(headerTemplate, headerElement);
+  if (footerElement) renderWithTemplate(footerTemplate, footerElement);
 }
