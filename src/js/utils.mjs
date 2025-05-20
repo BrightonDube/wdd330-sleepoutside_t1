@@ -39,3 +39,14 @@ export function renderListWithTemplate(
   const htmlItems = list.map(templateFn);
   parentElement.insertAdjacentHTML(position, htmlItems.join(""));
 }
+export function renderWithTemplate(template, parentElement, data, callback) {
+  parentElement.innerHTML = template;
+  if (callback) {
+    callback(data)
+  }
+}
+export async function loadTemplate(path){
+  const response = await fetch(path);
+  const template = await response.text();
+  return template
+}
