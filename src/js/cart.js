@@ -1,16 +1,5 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage, loadHeaderFooter, updateCartCount } from "./utils.mjs";
 
-function updateCartCount() {
-  const cart = getLocalStorage("so-cart");
-  const count = Array.isArray(cart) ? cart.length : 0;
-  const cartCountElem = document.getElementById("cart-count");
-  if (cartCountElem) {
-    cartCountElem.textContent = count > 0 ? count : "";
-    cartCountElem.style.background = "#8A470C";
-    cartCountElem.style.color = "#fff";
-    cartCountElem.style.display = count > 0 ? "inline-block" : "none";
-  }
-}
 function totalPrice(cartList) {
   let total = 0;
   cartList.forEach(item => {
@@ -18,8 +7,19 @@ function totalPrice(cartList) {
   })
   document.querySelector(".cart-total").innerHTML = `<strong>Total: </strong>$${total}`
 }
-// Ensure badge is updated on page load
-window.addEventListener("DOMContentLoaded", updateCartCount);
+
+function removeFromCart(id) {
+  let cart = getLocalStorage("so-cart");
+  if (!cart || !Array.isArray(cart)) return;
+  // Remove only the first matching item (in case of duplicates)
+  const idx = cart.findIndex((item) => item.Id === id);
+  if (idx > -1) {
+    cart.splice(idx, 1);
+    setLocalStorage("so-cart", cart);
+    renderCartContents();
+    // updateCartCount will be called by renderCartContents
+  }
+}
 
 function renderCartContents() {
   // Get cart items from localStorage
@@ -40,12 +40,12 @@ function renderCartContents() {
       btn.addEventListener("click", function () {
         const id = this.getAttribute("data-id");
         removeFromCart(id);
+        updateCartCount();
       });
     });
   } else {
     document.querySelector(".product-list").innerHTML = "";
   }
-  updateCartCount(); // Ensure cart count is updated on render
 }
 
 function cartItemTemplate(item) {
@@ -73,17 +73,13 @@ function cartItemTemplate(item) {
   return newItem;
 }
 
-function removeFromCart(id) {
-  let cart = getLocalStorage("so-cart");
-  if (!cart || !Array.isArray(cart)) return;
-  // Remove only the first matching item (in case of duplicates)
-  const idx = cart.findIndex((item) => item.Id === id);
-  if (idx > -1) {
-    cart.splice(idx, 1);
-    setLocalStorage("so-cart", cart);
-    renderCartContents();
-    // updateCartCount will be called by renderCartContents
-  }
-}
-
 renderCartContents();
+window.addEventListener("DOMContentLoaded", async () => {
+  try {
+    await loadHeaderFooter();
+    updateCartCount();
+  } catch (e) {
+    console.log(e);
+  }
+
+});
