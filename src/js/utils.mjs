@@ -50,9 +50,11 @@ export async function loadTemplate(path){
   const template = await response.text();
   return template
 }
-export function loadHeaderFooter(){
-  const headerTemplate = loadTemplate("../partials/header.html");
-  const footerTemplate = loadTemplate("../partials/footer.html");
-  renderWithTemplate(headerTemplate);
-  renderListWithTemplate(footerTemplate);
+export async function loadHeaderFooter(){
+  const headerTemplate = await loadTemplate("../partials/header.html");
+  const footerTemplate = await loadTemplate("../partials/footer.html");
+  const headerElement = document.querySelector("#header");
+  const footerElement = document.querySelector("#footer");
+  renderWithTemplate(headerTemplate, headerElement);
+  renderWithTemplate(footerTemplate, footerElement);
 }
