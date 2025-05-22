@@ -40,6 +40,7 @@ function renderCartContents() {
       btn.addEventListener("click", function () {
         const id = this.getAttribute("data-id");
         removeFromCart(id);
+        updateCartCount();
       });
     });
   } else {
