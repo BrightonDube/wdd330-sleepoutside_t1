@@ -2,9 +2,6 @@ import { renderListWithTemplate } from "./utils.mjs";
 
 // Product card template function
 function productCardTemplate(product) {
-  // Log image paths to debug
-  console.log(`Product card: ${product.Name}, Image path: ${product.Image}`);
-  
   // Fix the image path for the public directory
   const imagePath = product.Image.replace("../images", "/images");
   
