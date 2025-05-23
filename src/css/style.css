@@ -99,6 +99,56 @@ p {
   color: var(--tertiary-color);
 }
 
+/* Product discount styles */
+.product-image-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #e74c3c;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.discount-percent {
+  font-size: 1.2em;
+  line-height: 1.2;
+}
+
+.discount-original {
+  text-decoration: line-through;
+  font-size: 0.8em;
+  opacity: 0.9;
+  margin-top: 2px;
+}
+
+.price-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 10px 0;
+}
+
+.product-card__price {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: var(--secondary-color);
+  margin: 0;
+  padding: 0 0 0 0.75rem;
+}
+
 button {
   padding: 0.5em 2em;
   background-color: var(--secondary-color);
