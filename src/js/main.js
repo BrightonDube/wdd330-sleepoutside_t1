@@ -3,6 +3,11 @@ import ProductData from "./ProductData.mjs";
 import ProductList from "./ProductList.mjs";
 import { loadHeaderFooter, updateCartCount } from "./utils.mjs";
 
+document.addEventListener('DOMContentLoaded', async () => {
+  const alert = new Alert();
+  await alert.init();
+});
+
 // Create an instance of ProductData
 const productData = new ProductData("tents");
 // Get the element where we'll render the product list
