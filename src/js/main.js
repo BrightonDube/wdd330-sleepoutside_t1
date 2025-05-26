@@ -3,7 +3,7 @@ import ProductData from "./ProductData.mjs";
 import ProductList from "./ProductList.mjs";
 import { loadHeaderFooter, updateCartCount } from "./utils.mjs";
 //Import alert fromm Alert.js
-import Alert from './Alert.js';
+import Alert from './alert.js';
 
 // Initialize alerts when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
