@@ -10,16 +10,16 @@ function updateCartCount() {
 }
 
 export default class ProductDetails {
-  constructor(productId, dataSource) {
+  constructor(productId, dataSource, product) {
     this.productId = productId;
-    this.product = {};
+    this.product = product;
     this.dataSource = dataSource;
   }
 
   async init() {
-    // Get the specific product based on the ID
-    this.product = await this.dataSource.findProductById(this.productId);
+
     // Render the product details if product was found
+    this.product = await this.dataSource.findProductById(this.productId);
     if (this.product) {
       this.renderProductDetails();
       // Add event listener to Add to Cart button
@@ -50,20 +50,12 @@ export default class ProductDetails {
   }
 
   renderProductDetails() {
-    document.title = `Sleep Outside | ${this.product.Name}`;
-
-    // Log the image path to debug
-    // console.log(
-    //   `Product: ${this.product.Name}, Image path: ${this.product.Image}`,
-    // );
-
-    // Fix the image path for the public directory
-    const imagePath = this.product.Image.replace("../images", "/images");
-
+    document.title = `Sleep Outside | ${this.product.Name}`; 
+    
     document.querySelector("#product-detail").innerHTML = `
-      <h3>${this.product.Brand.Name}</h3>
+      <h3>${this.product.Category.charAt(0).toUpperCase()}${this.product.Category.slice(1)}</h3>
       <h2 class="divider">${this.product.NameWithoutBrand}</h2>
-      <img class="divider" src="${imagePath}" alt="${this.product.Name}" />
+      <img class="divider" src="${this.product.Images.PrimaryLarge}" alt="${this.product.Name}" />
       <p class="product-card__price">$${this.product.FinalPrice}</p>
       <p class="product__color">${this.product.Colors[0].ColorName}</p>
       <p class="product__description">${this.product.DescriptionHtmlSimple}</p>

@@ -1,0 +1,35 @@
+// Import ProductData module
+import ProductData from "./ProductData.mjs";
+import ProductList from "./ProductList.mjs";
+import { loadHeaderFooter, getParam, getLocalStorage } from "./utils.mjs";
+
+function updateCartCount() {
+  const cart = getLocalStorage("so-cart");
+  const count = Array.isArray(cart) ? cart.length : 0;
+  const cartCountElem = document.getElementById("cart-count");
+  if (cartCountElem) {
+    cartCountElem.textContent = count > 0 ? count : "";
+    cartCountElem.style.background = "#8A470C";
+    cartCountElem.style.color = "#fff";
+    cartCountElem.style.display = count > 0 ? "inline-block" : "none";
+  }
+}
+const category = getParam('category');
+document.querySelector(".top-products").textContent = `Top Products: ${category.charAt(0).toUpperCase()}${category.slice(1)}`;
+// Create an instance of ProductData
+const productData = new ProductData();
+// Get the element where we'll render the product list
+const listElement = document.querySelector(".product-list");
+// Create an instance of ProductList and initialize it
+const productList = new ProductList(category, productData, listElement);
+productList.init();
+// Call updateCartCount after DOM is loaded, it is async because the header comes from other file, so we need to wait for render it
+window.addEventListener("DOMContentLoaded", async () => {
+  try{
+   await loadHeaderFooter();
+   updateCartCount();
+  }catch(e){
+    console.log(e);
+  }
+  
+});
