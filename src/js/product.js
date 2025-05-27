@@ -5,7 +5,7 @@ import ProductDetails from "./ProductDetails.mjs";
 window.addEventListener("DOMContentLoaded", async () => {
   try {
     await loadHeaderFooter();
-    updateCartCount();
+    await updateCartCount();
   } catch (e) {
     console.log(e);
   }

@@ -1,5 +1,5 @@
 import { getLocalStorage, setLocalStorage, loadHeaderFooter, updateCartCount } from "./utils.mjs";
-
+loadHeaderFooter();
 function totalPrice(cartList) {
   let total = 0;
   cartList.forEach(item => {
@@ -73,13 +73,21 @@ function cartItemTemplate(item) {
   return newItem;
 }
 
-renderCartContents();
-window.addEventListener("DOMContentLoaded", async () => {
+// Initialize the cart page
+async function initCart() {
   try {
+    // Load header and footer first
     await loadHeaderFooter();
-    updateCartCount();
+    
+    // Then update cart count (badge will now exist in DOM)
+    await updateCartCount();
+    
+    // Finally render the cart contents
+    renderCartContents();
   } catch (e) {
-    console.log(e);
+    console.error('Error initializing cart:', e);
   }
+}
 
-});
+// Start initialization when DOM is loaded
+window.addEventListener('DOMContentLoaded', initCart);
