@@ -1,5 +1,5 @@
 import { getParam, loadHeaderFooter, updateCartCount } from "./utils.mjs";
-import ProductData from "./ProductData.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 import ProductDetails from "./ProductDetails.mjs";
 
 window.addEventListener("DOMContentLoaded", async () => {
@@ -11,7 +11,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     const productID = getParam("product");
     
     // Initialize the data source
-    const dataSource = new ProductData();
+    const dataSource = new ExternalServices();
     
     // Create and initialize the product details
     const product = new ProductDetails(productID, dataSource);

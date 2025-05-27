@@ -1,11 +1,12 @@
-import { loadHeaderFooter, updateCartCount, getLocalStorage } from './utils.mjs';
-import CheckoutService from './CheckoutService.mjs';
+import { loadHeaderFooter, updateCartCount } from './utils.mjs';
+import CheckoutProcess from './CheckoutProcess.mjs';
+import ProductData from './ProductData.mjs';
 
-// Get the base URL from environment variables
-const baseURL = import.meta.env.VITE_SERVER_URL;
+// Create an instance of ProductData for order submission
+const productData = new ProductData();
 
-// Create an instance of the CheckoutService
-const checkoutService = new CheckoutService(baseURL);
+// Create an instance of CheckoutProcess
+let checkout;
 
 // Initialize the checkout page
 async function initCheckout() {
@@ -19,13 +20,33 @@ async function initCheckout() {
     // Update cart count
     await updateCartCount();
     
-    // Populate order summary
-    populateOrderSummary();
+    // Initialize the checkout process
+    checkout = new CheckoutProcess('so-cart', '.order-summary');
+    checkout.init();
+    
+    // Add event listener to zip code field to calculate full order total
+    const zipInput = document.getElementById('zip');
+    if (zipInput) {
+      zipInput.addEventListener('blur', function() {
+        const zipCode = this.value;
+        if (zipCode && zipCode.length >= 5) {
+          checkout.calculateOrderTotalFromZip(zipCode);
+        }
+      });
+    }
     
     // Add event listener to form submission
-    document.querySelector('form[name="checkout"]').addEventListener('submit', handleSubmit);
+    const form = document.querySelector('form[name="checkout"]');
+    if (form) {
+      form.addEventListener('submit', handleSubmit);
+    }
   } catch (e) {
     console.error('Error initializing checkout page:', e);
+    // Show error message to user
+    const errorContainer = document.querySelector('.error-message') || document.createElement('div');
+    errorContainer.className = 'error-message';
+    errorContainer.innerHTML = 'Error initializing checkout. Please refresh the page and try again.';
+    document.querySelector('main').prepend(errorContainer);
   }
 }
 
@@ -35,14 +56,31 @@ async function handleSubmit(e) {
   
   // Show loading state
   const submitButton = document.getElementById('checkoutSubmit');
-  const originalButtonText = submitButton.textContent;
+  if (!submitButton) return;
+  
+  const form = e.target;
+  const statusMessageArea = document.querySelector('.checkout-status') || document.createElement('div');
+  statusMessageArea.className = 'checkout-status';
+  
+  // Add status message area to form if not already there
+  if (!statusMessageArea.parentNode) {
+    form.appendChild(statusMessageArea);
+  }
+  
+  // Set initial loading state
   submitButton.disabled = true;
+  const originalButtonText = submitButton.textContent;
   submitButton.textContent = 'Processing...';
+  statusMessageArea.innerHTML = '<p class="status-message processing">Processing your order...</p>';
   
   try {
     // Get form data
-    const form = e.target;
     const formData = new FormData(form);
+    
+    // Make sure the final calculations are done
+    checkout.calculateOrderTotal();
+    
+    // Prepare order data
     const order = {
       firstName: formData.get('fname'),
       lastName: formData.get('lname'),
@@ -54,69 +92,54 @@ async function handleSubmit(e) {
       expiration: formData.get('expiration'),
       code: formData.get('code'),
       orderDate: formData.get('orderDate'),
-      orderTotal: document.getElementById('orderTotal').textContent,
-      tax: document.getElementById('tax').textContent,
-      shipping: document.getElementById('shipping').textContent,
-      subtotal: document.getElementById('cartTotal').textContent
+      orderTotal: checkout.orderTotal.toFixed(2),
+      tax: checkout.tax.toFixed(2),
+      shipping: checkout.shipping.toFixed(2),
+      subtotal: checkout.itemTotal.toFixed(2),
+      items: checkout.items.map(item => ({
+        id: item.Id,
+        name: item.Name,
+        price: item.FinalPrice,
+        quantity: item.quantity
+      }))
     };
     
-    // Create status message area if it doesn't exist
-    let statusMessageArea = document.querySelector('.checkout-status');
-    if (!statusMessageArea) {
-      statusMessageArea = document.createElement('div');
-      statusMessageArea.className = 'checkout-status';
-      form.appendChild(statusMessageArea);
-    }
+    // Submit the order
+    statusMessageArea.innerHTML = '<p class="status-message processing">Submitting your order...</p>';
     
-    // Update status
-    statusMessageArea.innerHTML = '<p class="status-message processing">Validating order with server...</p>';
+    // Submit the order using ProductData
+    const result = await productData.submitOrder(order);
     
-    // First validate the order with server-side validation
-    const validationResult = await checkoutService.validateOrder(order);
+    // Order was successful
+    statusMessageArea.innerHTML = `
+      <p class="status-message success">
+        Order placed successfully! Order ID: ${result.orderId}
+      </p>`;
     
-    if (validationResult.success) {
-      // If validation passed, place the order
-      statusMessageArea.innerHTML = '<p class="status-message processing">Order validated! Processing payment...</p>';
-      
-      const orderResult = await checkoutService.placeOrder(order);
-      
-      if (orderResult.success) {
-        // Order was successful
-        statusMessageArea.innerHTML = `<p class="status-message success">Order placed successfully! Order ID: ${orderResult.orderId}</p>`;
-        
-        // Clear the cart
-        localStorage.removeItem('so-cart');
-        
-        // Redirect to success page after a short delay
-        setTimeout(() => {
-          window.location.href = `../success/index.html?order=${orderResult.orderId}`;
-        }, 2000);
-      }
-    }
+    // Clear the cart
+    localStorage.removeItem('so-cart');
+    
+    // Redirect to success page after a short delay
+    setTimeout(() => {
+      window.location.href = `../success/index.html?order=${result.orderId}`;
+    }, 2000);
+    
   } catch (error) {
     console.error('Checkout error:', error);
     
     // Show error message
-    const statusMessageArea = document.querySelector('.checkout-status') || document.createElement('div');
-    statusMessageArea.className = 'checkout-status';
+    let errorMessage = 'An unexpected error occurred while processing your order.';
     
-    if (error.serverTotal && error.clientTotal) {
-      // This is a validation error with total mismatch
-      statusMessageArea.innerHTML = `
-        <p class="status-message error">
-          <strong>Error:</strong> ${error.message}<br>
-          Server calculated: $${error.serverTotal}<br>
-          Your total: $${error.clientTotal}
-        </p>`;
-    } else {
-      // General error
-      statusMessageArea.innerHTML = `<p class="status-message error"><strong>Error:</strong> ${error.message || 'An unexpected error occurred'}</p>`;
+    if (error.message.includes('Failed to submit order')) {
+      errorMessage = 'There was a problem submitting your order. Please try again.';
+    } else if (error.message.includes('network')) {
+      errorMessage = 'Network error. Please check your internet connection and try again.';
     }
     
-    // Add to form if not already there
-    if (!statusMessageArea.parentNode) {
-      document.querySelector('form[name="checkout"]').appendChild(statusMessageArea);
-    }
+    statusMessageArea.innerHTML = `
+      <p class="status-message error">
+        <strong>Error:</strong> ${errorMessage}
+      </p>`;
     
     // Reset button
     submitButton.disabled = false;
@@ -124,54 +147,7 @@ async function handleSubmit(e) {
   }
 }
 
-// Populate the order summary from cart items
-function populateOrderSummary() {
-  const cart = getLocalStorage('so-cart');
-  
-  if (cart && Array.isArray(cart) && cart.length > 0) {
-    // Calculate totals
-    let subtotal = 0;
-    let itemCount = cart.length;
-    
-    cart.forEach(item => {
-      // Use FinalPrice for calculation if available, fallback to ListPrice
-      const itemPrice = item.FinalPrice || item.ListPrice;
-      subtotal += itemPrice;
-    });
-    
-    // Calculate tax: 6% of subtotal
-    const taxRate = 0.06;
-    const tax = subtotal * taxRate;
-    
-    // Calculate shipping: $10 for first item + $2 for each additional item
-    let shipping = 10; // Base shipping for first item
-    if (itemCount > 1) {
-      shipping += (itemCount - 1) * 2; // Add $2 for each additional item
-    }
-    
-    const orderTotal = subtotal + tax + shipping;
-    
-    // Format currency values
-    const formatCurrency = (amount) => `$${amount.toFixed(2)}`;
-    
-    // Update order summary
-    document.getElementById('num-items').textContent = itemCount;
-    document.getElementById('cartTotal').textContent = formatCurrency(subtotal);
-    document.getElementById('tax').textContent = formatCurrency(tax);
-    document.getElementById('shipping').textContent = formatCurrency(shipping);
-    document.getElementById('orderTotal').textContent = formatCurrency(orderTotal);
-  } else {
-    // Handle empty cart
-    const emptyValues = ['num-items', 'cartTotal', 'tax', 'shipping', 'orderTotal'];
-    emptyValues.forEach(id => {
-      document.getElementById(id).textContent = id === 'num-items' ? '0' : '$0.00';
-    });
-    
-    // Disable checkout button if cart is empty
-    document.getElementById('checkoutSubmit').disabled = true;
-    document.getElementById('checkoutSubmit').textContent = 'Cart Empty';
-  }
-}
+// Empty cart handling moved to CheckoutProcess class
 
 // Initialize the page when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', initCheckout);

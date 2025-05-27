@@ -1,5 +1,5 @@
 // Import needed modules for the home page
-import ProductData from "./ProductData.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 import { loadHeaderFooter, updateCartCount, getLocalStorage, setLocalStorage } from "./utils.mjs";
 import Alert from './alert.js';
 
@@ -12,7 +12,7 @@ async function getRandomProducts(count = 4) {
     // If not in localStorage, fetch from API
     if (!allProducts || !Array.isArray(allProducts) || allProducts.length === 0) {
       console.log('No products found in localStorage, fetching from API...');
-      const productData = new ProductData();
+      const productData = new ExternalServices();
       const categories = ['tents', 'backpacks', 'sleeping-bags', 'hammocks'];
       
       try {
