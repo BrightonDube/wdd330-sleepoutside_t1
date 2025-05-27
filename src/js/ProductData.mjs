@@ -1,6 +1,4 @@
-// It calls an API
-// Provide a fallback URL if the environment variable is not set
-const baseURL = import.meta.env.VITE_SERVER_URL || 'https://wdd330-backend.onrender.com/'
+const baseURL = import.meta.env.VITE_SERVER_URL
 
 function convertToJson(res) {
   if (res.ok) {
@@ -12,18 +10,13 @@ function convertToJson(res) {
 
 export default class ProductData {
   constructor() {
+    // Empty constructor - no category or path needed
   }
+  
   async getData(category) {
-    try {
-      console.log(`Fetching data for category: ${category} from ${baseURL}products/search/${category}`);
-      const response = await fetch(`${baseURL}products/search/${category}`);
-      const data = await convertToJson(response);
-      console.log(`Received ${data.Result ? data.Result.length : 0} products for ${category}`);
-      return data.Result || [];
-    } catch (error) {
-      console.error(`Error getting data for ${category}:`, error);
-      return [];
-    }
+    const response = await fetch(`${baseURL}products/search/${category}`);
+    const data = await convertToJson(response);
+    return data.Result;
   }
   async findProductById(id) {
     try {
