@@ -4,8 +4,10 @@ function totalPrice(cartList) {
   let total = 0;
   cartList.forEach(item => {
     total += item.ListPrice;
-  })
-  document.querySelector(".cart-total").innerHTML = `<strong>Total: </strong>$${total}`
+  });
+  // Format the total to 2 decimal places (nearest cent)
+  const formattedTotal = total.toFixed(2);
+  document.querySelector(".cart-total").innerHTML = `<strong>Total: </strong>$${formattedTotal}`
 }
 
 function removeFromCart(id) {
