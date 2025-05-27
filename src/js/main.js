@@ -12,7 +12,7 @@ async function getRandomProducts(count = 4) {
     // If not in localStorage, fetch from API
     if (!allProducts || !Array.isArray(allProducts) || allProducts.length === 0) {
       console.log('No products found in localStorage, fetching from API...');
-      const productData = new ExternalServices();
+      const externalServices = new ExternalServices();
       const categories = ['tents', 'backpacks', 'sleeping-bags', 'hammocks'];
       
       try {
@@ -20,7 +20,7 @@ async function getRandomProducts(count = 4) {
         const productsByCategory = [];
         for (const category of categories) {
           try {
-            const products = await productData.getData(category);
+            const products = await externalServices.getProductsByCategory(category);
             if (products && products.length > 0) {
               productsByCategory.push(products);
             }

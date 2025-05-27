@@ -755,9 +755,22 @@ main button.checkout:hover a {
 }
 
 .checkout-form input:focus {
-  border-color: var(--primary-color);
-  outline: none;
+  outline: 2px solid var(--primary-color);
   box-shadow: 0 0 0 2px rgba(240, 168, 104, 0.2);
+}
+
+/* Zip message styling */
+.zip-message {
+  grid-column: 2;
+  font-size: 0.8rem;
+  color: var(--tertiary-color);
+  margin-top: 0.25rem;
+  min-height: 1.2rem;
+  transition: opacity 0.3s ease;
+}
+
+.zip-message:empty {
+  opacity: 0;
 }
 
 .checkout-form button {

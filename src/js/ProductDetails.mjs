@@ -19,7 +19,7 @@ export default class ProductDetails {
   async init() {
 
     // Render the product details if product was found
-    this.product = await this.dataSource.findProductById(this.productId);
+    this.product = await this.dataSource.getProductById(this.productId);
     if (this.product) {
       this.renderProductDetails();
       // Add event listener to Add to Cart button

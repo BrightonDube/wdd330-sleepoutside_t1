@@ -8,7 +8,7 @@ function convertToJson(res) {
   }
 }
 
-export default class ProductData {
+export default class ExternalServices {
   constructor() {
     // Empty constructor - no category or path needed
   }
@@ -18,7 +18,7 @@ export default class ProductData {
    * @param {string} category - The category of products to fetch
    * @returns {Promise<Array>} - Array of products in the category
    */
-  async getData(category) {
+  async getProductsByCategory(category) {
     const response = await fetch(`${baseURL}products/search/${category}`);
     const data = await convertToJson(response);
     return data.Result;

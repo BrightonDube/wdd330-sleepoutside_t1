@@ -39,10 +39,16 @@ export default class ProductList {
   }
 
   async init() {
-    // Get the data from the dataSource
-    const list = await this.dataSource.getData(this.category);
-    // Render the list
-    this.renderList(list);
+    try {
+      // Get the data from the dataSource using the correct method name
+      const list = await this.dataSource.getProductsByCategory(this.category);
+      // Render the list
+      this.renderList(list);
+    } catch (error) {
+      console.error('Error initializing product list:', error);
+      // Show error message to the user
+      this.listElement.innerHTML = '<p class="error-message">Error loading products. Please try again later.</p>';
+    }
   }
 
   renderList(list) {

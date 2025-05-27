@@ -14,16 +14,19 @@ export default class CheckoutProcess {
   init() {
     this.list = getLocalStorage(this.key);
     this.calculateItemSummary();
+    // Calculate the full order total after loading items
+    this.calculateOrderTotal();
   }
 
   calculateItemSummary() {
     // Calculate the total of all items in the cart
-    const summaryElement = document.querySelector(
-      this.outputSelector + ' #cartTotal'
-    );
-    const itemNumElement = document.querySelector(
-      this.outputSelector + ' #num-items'
-    );
+    const summaryElement = document.getElementById('cartTotal');
+    const itemNumElement = document.getElementById('num-items');
+
+    if (!summaryElement || !itemNumElement) {
+      console.error('Could not find required elements in the DOM');
+      return;
+    }
 
     // Calculate item count and subtotal
     let itemCount = 0;
@@ -40,10 +43,10 @@ export default class CheckoutProcess {
       });
       
       // Set item count
-      itemNumElement.innerText = itemCount;
+      itemNumElement.textContent = itemCount;
       
       // Set item total
-      summaryElement.innerText = `$${this.itemTotal.toFixed(2)}`;
+      summaryElement.textContent = `$${this.itemTotal.toFixed(2)}`;
     } else {
       // Handle empty cart
       this.handleEmptyCart();
@@ -86,27 +89,36 @@ export default class CheckoutProcess {
     // Calculate order total
     this.orderTotal = this.itemTotal + this.tax + this.shipping;
 
-    // Display the totals
-    this.displayOrderTotals();
-  }
-
-  displayOrderTotals() {
-    // Once the totals are all calculated, display them in the order summary
-    const tax = document.querySelector(`${this.outputSelector} #tax`);
-    const shipping = document.querySelector(`${this.outputSelector} #shipping`);
-    const orderTotal = document.querySelector(`${this.outputSelector} #orderTotal`);
-
-    tax.innerText = `$${this.tax.toFixed(2)}`;
-    shipping.innerText = `$${this.shipping.toFixed(2)}`;
-    orderTotal.innerText = `$${this.orderTotal.toFixed(2)}`;
+    // Get the DOM elements
+    const taxElement = document.getElementById('tax');
+    const shippingElement = document.getElementById('shipping');
+    const orderTotalElement = document.getElementById('orderTotal');
+    
+    // Update the UI if elements exist
+    if (taxElement && shippingElement && orderTotalElement) {
+      taxElement.textContent = `$${this.tax.toFixed(2)}`;
+      shippingElement.textContent = `$${this.shipping.toFixed(2)}`;
+      orderTotalElement.textContent = `$${this.orderTotal.toFixed(2)}`;
+    } else {
+      console.error('Could not find one or more required elements in the DOM');
+    }
   }
 
   // Method to handle zip code entry
   calculateOrderTotalFromZip(zip) {
     // In a real implementation, we might make an API call to get tax rates based on zip
     // For now, we'll use our flat 6% tax rate
+    console.log(`Zip code entered: ${zip}`);
     this.calculateOrderTotal();
     
+    // Show a message to the user (optional)
+    const zipMessage = document.getElementById('zip-message');
+    if (zipMessage) {
+      zipMessage.textContent = `Using default tax rate for zip code ${zip}`;
+      setTimeout(() => {
+        zipMessage.textContent = '';
+      }, 3000);
+    }
     // Could add ZIP validation here if needed
     return true;
   }

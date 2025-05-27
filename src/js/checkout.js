@@ -1,9 +1,9 @@
 import { loadHeaderFooter, updateCartCount } from './utils.mjs';
 import CheckoutProcess from './CheckoutProcess.mjs';
-import ProductData from './ProductData.mjs';
+import ExternalServices from './ExternalServices.mjs';
 
-// Create an instance of ProductData for order submission
-const productData = new ProductData();
+// Create an instance of ExternalServices for order submission
+const externalServices = new ExternalServices();
 
 // Create an instance of CheckoutProcess
 let checkout;
@@ -21,7 +21,7 @@ async function initCheckout() {
     await updateCartCount();
     
     // Initialize the checkout process
-    checkout = new CheckoutProcess('so-cart', '.order-summary');
+    checkout = new CheckoutProcess('so-cart', '.checkout-summary');
     checkout.init();
     
     // Add event listener to zip code field to calculate full order total
@@ -107,8 +107,8 @@ async function handleSubmit(e) {
     // Submit the order
     statusMessageArea.innerHTML = '<p class="status-message processing">Submitting your order...</p>';
     
-    // Submit the order using ProductData
-    const result = await productData.submitOrder(order);
+    // Submit the order using ExternalServices
+    const result = await externalServices.submitOrder(order);
     
     // Order was successful
     statusMessageArea.innerHTML = `
