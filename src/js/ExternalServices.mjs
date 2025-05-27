@@ -1,7 +1,7 @@
 // ExternalServices.mjs - Handles all external API calls including products and checkout
 
-// Base URL from environment variable
-const baseURL = import.meta.env.VITE_SERVER_URL || 'http://wdd330-backend.onrender.com/';
+// Base URL from environment variable or fallback to the correct endpoint
+const baseURL = import.meta.env.VITE_SERVER_URL || 'https://wdd330-backend.onrender.com/';
 
 export default class ExternalServices {
   constructor() {}
@@ -50,12 +50,16 @@ export default class ExternalServices {
       }
       console.log('Submitting order:', orderForLog);
       
-      const response = await fetch(`${baseURL}checkout`, {
+      // Make sure we're using the correct endpoint
+      const checkoutUrl = `${baseURL}checkout`;
+      console.log('Sending request to:', checkoutUrl);
+      
+      const response = await fetch(checkoutUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(order)
+        body: JSON.stringify(order) // The order object is already properly formatted
       });
       
       let responseData;

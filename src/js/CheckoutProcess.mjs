@@ -150,31 +150,25 @@ export default class CheckoutProcess {
     // Get form data as JSON
     const formData = this.formDataToJSON(form);
     
-    // Prepare the order object
+    // Prepare the order object with all required fields
     const order = {
-      ...formData,
       orderDate: new Date().toISOString(),
+      fname: formData.fname,
+      lname: formData.lname,
+      street: formData.street,
+      city: formData.city,
+      state: formData.state,
+      zip: formData.zip,
+      cardNumber: formData.cardNumber ? formData.cardNumber.replace(/\D/g, '') : '',
+      expiration: formData.expiration ? formData.expiration.replace(/[^\d/]/g, '') : '',
+      code: formData.code ? formData.code.replace(/\D/g, '') : '',
       items: this.packageItems(this.list),
-      orderTotal: this.orderTotal.toFixed(2),
+      orderTotal: parseFloat(this.orderTotal).toFixed(2),
       shipping: parseFloat(this.shipping).toFixed(2),
-      tax: this.tax.toFixed(2)
+      tax: parseFloat(this.tax).toFixed(2)
     };
     
-    // Clean up the card number (remove any non-digit characters)
-    if (order.cardNumber) {
-      order.cardNumber = order.cardNumber.replace(/\D/g, '');
-    }
-    
-    // Clean up the expiration date (remove any non-digit or slash characters)
-    if (order.expiration) {
-      order.expiration = order.expiration.replace(/[^\d/]/g, '');
-    }
-    
-    // Clean up the CVV (remove any non-digit characters)
-    if (order.code) {
-      order.code = order.code.replace(/\D/g, '');
-    }
-    
+    console.log('Prepared order object:', JSON.stringify(order, null, 2));
     return order;
   }
 }

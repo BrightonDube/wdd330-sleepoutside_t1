@@ -39,10 +39,10 @@ async function initCheckout() {
     }
     
     // Add event listener to form submission
-    const form = document.querySelector('form[name="checkout"]');
-    if (form) {
-      form.addEventListener('submit', handleSubmit);
-    }
+    document.forms['checkout'].addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent the default form submission
+      handleSubmit(event);
+    });
   } catch (e) {
     console.error('Error initializing checkout page:', e);
     // Show error message to user
@@ -54,27 +54,26 @@ async function initCheckout() {
 }
 
 // Handle form submission
-async function handleSubmit(e) {
-  e.preventDefault();
+async function handleSubmit(event) {
+  const form = event.target;
+  const submitButton = form.querySelector('button[type="submit"]');
+  const originalButtonText = submitButton ? submitButton.textContent : '';
   
-  // Show loading state
-  const submitButton = document.getElementById('checkoutSubmit');
-  if (!submitButton) return;
-  
-  const form = e.target;
-  const statusMessageArea = document.querySelector('.checkout-status') || document.createElement('div');
-  statusMessageArea.className = 'checkout-status';
+  // Show processing message
+  const statusMessageArea = document.getElementById('status-message') || document.createElement('div');
+  statusMessageArea.className = 'status-message';
+  statusMessageArea.innerHTML = '<p class="processing">Processing your order...</p>';
   
   // Add status message area to form if not already there
   if (!statusMessageArea.parentNode) {
     form.appendChild(statusMessageArea);
   }
   
-  // Set initial loading state
-  submitButton.disabled = true;
-  const originalButtonText = submitButton.textContent;
-  submitButton.textContent = 'Processing...';
-  statusMessageArea.innerHTML = '<p class="status-message processing">Processing your order...</p>';
+  // Disable submit button to prevent double submission
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = 'Processing...';
+  }
   
   try {
     // Make sure the final calculations are done
@@ -92,62 +91,58 @@ async function handleSubmit(e) {
     }
     
     // Submit the order using ExternalServices
+    console.log('Submitting order to server...');
     const result = await externalServices.submitOrder(order);
     
     // Log the result for debugging
-    console.log('Order submission result:', result);
+    console.log('Server response:', result);
     
     // Order was successful
     statusMessageArea.innerHTML = `
-      <p class="status-message success">
-        Order placed successfully! Order ID: ${result.id}
-      </p>`;
+      <p class="success">
+        Order submitted successfully! Order ID: ${result.orderId}
+      </p>
+    `;
     
     // Clear the cart
     localStorage.removeItem('so-cart');
     
-    // Redirect to success page after a short delay
+    // Log successful order details
+    console.log('Order successful. Order ID:', result.orderId);
+    
+    // Redirect to order confirmation page after a short delay
     setTimeout(() => {
-      window.location.href = `../success/index.html?order=${result.id}`;
+      window.location.href = `/checkout/confirmation.html?order=${result.orderId}`;
     }, 2000);
     
   } catch (error) {
-    console.error('Checkout error:', error);
+    console.error('Error submitting order:', error);
     
-    // Show error message with more details
-    let errorMessage = 'An unexpected error occurred while processing your order.';
+    // Determine user-friendly error message
+    let errorMessage = 'There was a problem submitting your order. Please try again.';
     
-    if (error.message.includes('Failed to submit order')) {
-      // Try to extract a more specific error message from the response
-      try {
-        const errorMatch = error.message.match(/\{.*\}/);
-        if (errorMatch) {
-          const errorObj = JSON.parse(errorMatch[0]);
-          errorMessage = errorObj.message || 'There was a problem with your order. Please check your information and try again.';
-        } else {
-          errorMessage = 'There was a problem submitting your order. Please try again.';
-        }
-      } catch (e) {
-        // If we can't parse the error, use a generic message
-        errorMessage = 'There was a problem with your order. Please check your information and try again.';
-      }
-    } else if (error.message.includes('network')) {
+    if (error.message.includes('network')) {
       errorMessage = 'Network error. Please check your internet connection and try again.';
     } else if (error.message.includes('400')) {
       errorMessage = 'Invalid order data. Please check your information and try again.';
+    } else if (error.message) {
+      errorMessage = error.message;
     }
     
+    // Show error message to user
     statusMessageArea.innerHTML = `
-      <p class="status-message error">
+      <p class="error">
         <strong>Error:</strong> ${errorMessage}
       </p>`;
     
-    // Reset button
-    submitButton.disabled = false;
-    submitButton.textContent = originalButtonText;
+    // Re-enable submit button
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
+    }
     
     // Log the error details for debugging
-    console.error('Order submission failed with error:', error.message);
+    console.error('Order submission failed with error:', error);
     if (error.response) {
       console.error('Response data:', error.response);
     }
@@ -162,13 +157,13 @@ function fillTestData() {
   if (import.meta.env.MODE !== 'development') return;
   
   const testData = {
-    'fname': 'John',
-    'lname': 'Doe',
-    'street': '123 Main St',
-    'city': 'Rexburg',
-    'state': 'ID',
-    'zip': '83440',
-    'cardNumber': '5555555555554444', // Test Mastercard number
+    'fname': 'Test',
+    'lname': 'User',
+    'street': '123 Test St',
+    'city': 'Testville',
+    'state': 'UT',
+    'zip': '84604',
+    'cardNumber': '1234123412341234', // Test card number
     'expiration': '12/30', // Future date
     'code': '123' // 3-digit CVV
   };
