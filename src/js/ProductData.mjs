@@ -23,6 +23,7 @@ export default class ProductData {
       console.log(`Fetching product with ID: ${id} from ${baseURL}product/${id}`);
       const response = await fetch(`${baseURL}product/${id}`);
       const data = await convertToJson(response);
+      console.log('Product data structure:', data.Result);
       return data.Result;
     } catch (error) {
       console.error(`Error finding product with ID ${id}:`, error);

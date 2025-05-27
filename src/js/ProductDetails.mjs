@@ -68,7 +68,7 @@ export default class ProductDetails {
       <h2 class="divider">${this.product.NameWithoutBrand}</h2>
       <div class="product-image-container">
         ${discountBadge}
-        <img class="divider" src="${this.product.Images.PrimaryLarge}" alt="${this.product.Name}" />
+        <img class="divider" src="${this.product.Image || this.product.Images?.PrimaryLarge}" alt="${this.product.Name}" />
       </div>
       <div class="product-detail__price-container">
         <p class="product-card__price">$${this.product.FinalPrice.toFixed(2)}</p>

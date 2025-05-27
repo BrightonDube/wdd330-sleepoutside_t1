@@ -18,7 +18,7 @@ function productCardTemplate(product) {
     <a href="/product_pages/index.html?product=${product.Id}">
       ${discountBadge}
       <img
-        src="${product.Images.PrimaryMedium}"
+        src="${product.Image || product.Images?.PrimaryMedium}"
         alt="${product.Name}"
       />
       <h2 class="card__name">${product.NameWithoutBrand}</h2>
