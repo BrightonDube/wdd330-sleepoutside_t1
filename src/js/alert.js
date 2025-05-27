@@ -11,7 +11,7 @@ export default class Alert {
   async loadAlerts() {
     try {
       // Corrected fetch path
-      const response = await fetch('alerts.json');
+      const response = await fetch('/alerts.json');
       if (!response.ok) throw new Error('Failed to load alerts.json');
       this.alerts = await response.json();
       console.log('Loaded alerts:', this.alerts); // Debug log

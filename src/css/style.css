@@ -405,3 +405,28 @@ footer {
   font-size: var(--small-font);
   padding: 1em;
 }
+
+/* #SVG in the main page */
+section.products ul {
+  display: flex;
+  justify-content: space-evenly;
+  list-style: none;
+  margin-top: 40px;
+}
+
+section.products ul li a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+}
+section.products ul li a h2{
+  color: blue;
+}
+section.products ul li a h2:hover {
+  color: red;
+}
+
+img.svg {
+  width: 100px;
+}
