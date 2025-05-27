@@ -43,7 +43,12 @@ export default class ExternalServices {
   // Submit an order to the server
   async submitOrder(order) {
     try {
-      console.log('Submitting order:', JSON.stringify(order, null, 2));
+      // Log the order data being sent (without full card number for security)
+      const orderForLog = { ...order };
+      if (orderForLog.cardNumber) {
+        orderForLog.cardNumber = `${order.cardNumber.substring(0, 4)}...${order.cardNumber.slice(-4)}`;
+      }
+      console.log('Submitting order:', orderForLog);
       
       const response = await fetch(`${baseURL}checkout`, {
         method: 'POST',
@@ -53,11 +58,32 @@ export default class ExternalServices {
         body: JSON.stringify(order)
       });
       
-      const responseData = await response.json();
+      let responseData;
+      try {
+        responseData = await response.json();
+      } catch (e) {
+        console.error('Failed to parse server response as JSON');
+        throw new Error('Invalid response from server');
+      }
       
       if (!response.ok) {
-        console.error('Server responded with error:', responseData);
-        throw new Error(responseData.message || 'Order submission failed');
+        console.error('Server responded with error status:', response.status);
+        console.error('Error details:', responseData);
+        
+        // Create a more detailed error message
+        let errorMessage = 'Order submission failed';
+        if (responseData && responseData.cardNumber) {
+          errorMessage = `Card number error: ${responseData.cardNumber}`;
+        } else if (responseData && typeof responseData === 'object') {
+          errorMessage = Object.entries(responseData)
+            .map(([key, value]) => `${key}: ${value}`)
+            .join('; ');
+        }
+        
+        const error = new Error(errorMessage);
+        error.response = responseData;
+        error.status = response.status;
+        throw error;
       }
       
       return responseData;

@@ -122,4 +122,59 @@ export default class CheckoutProcess {
     // Could add ZIP validation here if needed
     return true;
   }
+
+  // Convert cart items to the simplified format required for checkout
+  packageItems(items) {
+    return items.map(item => ({
+      id: item.Id,
+      name: item.Name,
+      price: parseFloat(item.FinalPrice || item.ListPrice).toFixed(2),
+      quantity: parseInt(item.quantity || 1, 10)
+    }));
+  }
+
+  // Helper function to convert form data to JSON
+  formDataToJSON(formElement) {
+    const formData = new FormData(formElement);
+    const data = {};
+    
+    for (let [key, value] of formData.entries()) {
+      data[key] = value;
+    }
+    
+    return data;
+  }
+
+  // Process the checkout form and submit the order
+  async checkout(form) {
+    // Get form data as JSON
+    const formData = this.formDataToJSON(form);
+    
+    // Prepare the order object
+    const order = {
+      ...formData,
+      orderDate: new Date().toISOString(),
+      items: this.packageItems(this.list),
+      orderTotal: this.orderTotal.toFixed(2),
+      shipping: parseFloat(this.shipping).toFixed(2),
+      tax: this.tax.toFixed(2)
+    };
+    
+    // Clean up the card number (remove any non-digit characters)
+    if (order.cardNumber) {
+      order.cardNumber = order.cardNumber.replace(/\D/g, '');
+    }
+    
+    // Clean up the expiration date (remove any non-digit or slash characters)
+    if (order.expiration) {
+      order.expiration = order.expiration.replace(/[^\d/]/g, '');
+    }
+    
+    // Clean up the CVV (remove any non-digit characters)
+    if (order.code) {
+      order.code = order.code.replace(/\D/g, '');
+    }
+    
+    return order;
+  }
 }
