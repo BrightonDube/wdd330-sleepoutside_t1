@@ -1,26 +1,43 @@
 <!doctype html>
 
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+  <meta charset="UTF-8" />
 
-    <title>Sleep Outside | Checkout</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="css/style.css" />
-    <script src="../js/checkout.js"></script>
-  </head>
+  <title>Sleep Outside | Checkout</title>
 
-  <body>
-    <header class="divider" id="header"></header>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="../js/checkout.js"></script>
+</head>
 
-    <main class="divider">
-      <section class="products">
-        <h2>Review & Place your Order</h2>
-      </section>
-    </main>
+<body>
+  <header class="divider" id="header"></header>
 
-    <footer id="footer"></footer>
-  </body>
+  <main class="divider">
+    <section class="products">
+      <h2>Review & Place your Order</h2>
+      <form action="POST">
+        <label for="first-name">first Name</label>
+        <input type="text" name="first-name"></input>
+        <label for="last-name">Last Name</label>
+        <input type="text" name="last-name"></input>
+        <label for="street">Street Address</label>
+        <input type="text" name="street">
+        <label for="city"></label>
+          <input type="text" name="city">
+          <label for="state"></label>
+          <input type="text" name="state">
+          <label for="zip-code"></label>
+          <input type="text" name="zip-code">
+        </label>
+      </form>
+    </section>
+  </main>
+
+  <footer id="footer"></footer>
+</body>
+
 </html>

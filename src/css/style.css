@@ -430,3 +430,11 @@ section.products ul li a h2:hover {
 img.svg {
   width: 100px;
 }
+main button.checkout {
+  background-color: #8a470c;
+  align-self: flex-start;
+}
+main button.checkout:hover{
+background-color: #c89632;
+color: black;
+}
