@@ -131,17 +131,24 @@ function populateOrderSummary() {
   if (cart && Array.isArray(cart) && cart.length > 0) {
     // Calculate totals
     let subtotal = 0;
-    let itemCount = 0;
+    let itemCount = cart.length;
     
     cart.forEach(item => {
-      subtotal += item.ListPrice;
-      itemCount++;
+      // Use FinalPrice for calculation if available, fallback to ListPrice
+      const itemPrice = item.FinalPrice || item.ListPrice;
+      subtotal += itemPrice;
     });
     
-    // Calculate tax and shipping
-    const taxRate = 0.06; // 6% tax rate
+    // Calculate tax: 6% of subtotal
+    const taxRate = 0.06;
     const tax = subtotal * taxRate;
-    const shipping = subtotal > 100 ? 0 : 10; // Free shipping over $100
+    
+    // Calculate shipping: $10 for first item + $2 for each additional item
+    let shipping = 10; // Base shipping for first item
+    if (itemCount > 1) {
+      shipping += (itemCount - 1) * 2; // Add $2 for each additional item
+    }
+    
     const orderTotal = subtotal + tax + shipping;
     
     // Format currency values

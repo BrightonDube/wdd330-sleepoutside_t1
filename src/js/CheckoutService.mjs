@@ -76,6 +76,7 @@ export default class CheckoutService {
           let serverTax = 0;
           let serverShipping = 0;
           let serverTotal = 0;
+          let itemCount = orderItems.length;
 
           // Pretend server retrieved current prices from database
           orderItems.forEach(item => {
@@ -85,9 +86,15 @@ export default class CheckoutService {
             serverSubtotal += itemPrice;
           });
 
-          // Calculate tax and shipping as server would
-          serverTax = serverSubtotal * 0.06; // 6% tax
-          serverShipping = serverSubtotal > 100 ? 0 : 10; // Free shipping over $100
+          // Calculate tax: 6% of subtotal
+          serverTax = serverSubtotal * 0.06;
+          
+          // Calculate shipping: $10 for first item + $2 for each additional item
+          serverShipping = 10; // Base shipping for first item
+          if (itemCount > 1) {
+            serverShipping += (itemCount - 1) * 2; // Add $2 for each additional item
+          }
+          
           serverTotal = serverSubtotal + serverTax + serverShipping;
 
           // Compare with client-provided values
