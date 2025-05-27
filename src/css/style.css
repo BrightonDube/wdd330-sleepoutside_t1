@@ -420,6 +420,43 @@ section.products ul li a {
   align-items: center;
   text-decoration: none;
 }
+.product-card__price {
+  color: var(--primary-color);
+}
+
+.product-card__price-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.product-card__original-price {
+  color: var(--dark-grey);
+  text-decoration: line-through;
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #e63946;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 2;
+}
+
+.on-sale {
+  position: relative;
+  overflow: hidden;
+}
+
 section.products ul li a h2 {
   color: var(--tertiary-color);
   transition: color 0.3s ease;

@@ -2,17 +2,31 @@ import { renderListWithTemplate } from "./utils.mjs";
 
 // Product card template function
 function productCardTemplate(product) {
-  // Fix the image path for the public directory
+  // Check if product is discounted
+  const isDiscounted = product.FinalPrice < product.SuggestedRetailPrice;
   
-  return `<li class="product-card divider">
+  // Calculate discount percentage if discounted
+  let discountPercentage = 0;
+  let discountBadge = '';
+  
+  if (isDiscounted) {
+    discountPercentage = Math.round(((product.SuggestedRetailPrice - product.FinalPrice) / product.SuggestedRetailPrice) * 100);
+    discountBadge = `<div class="discount-badge">-${discountPercentage}%</div>`;
+  }
+  
+  return `<li class="product-card divider ${isDiscounted ? 'on-sale' : ''}">
     <a href="/product_pages/index.html?product=${product.Id}">
+      ${discountBadge}
       <img
         src="${product.Images.PrimaryMedium}"
         alt="${product.Name}"
       />
       <h2 class="card__name">${product.NameWithoutBrand}</h2>
       <p class="card__brand">${product.Brand.Name}</p>
-      <p class="product-card__price">$${product.FinalPrice}</p>
+      <div class="product-card__price-container">
+        <p class="product-card__price">$${product.FinalPrice}</p>
+        ${isDiscounted ? `<p class="product-card__original-price">$${product.SuggestedRetailPrice}</p>` : ''}
+      </div>
     </a>
   </li>`;
 }
