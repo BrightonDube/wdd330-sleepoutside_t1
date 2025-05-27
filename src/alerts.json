@@ -1,0 +1,13 @@
+[
+  {
+    "message": "🚨 This is only a test alert!",
+    "background": "darkblue",
+    "color": "white"
+  },
+  {
+    "message": "🌦️ Scheduled maintenance tonight at 10 PM.",
+    "background": "orange",
+    "color": "black"
+  }
+  
+]
