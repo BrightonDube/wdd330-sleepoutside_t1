@@ -43,6 +43,8 @@ export default class ExternalServices {
   // Submit an order to the server
   async submitOrder(order) {
     try {
+      console.log('Submitting order:', JSON.stringify(order, null, 2));
+      
       const response = await fetch(`${baseURL}checkout`, {
         method: 'POST',
         headers: {
@@ -51,14 +53,17 @@ export default class ExternalServices {
         body: JSON.stringify(order)
       });
       
+      const responseData = await response.json();
+      
       if (!response.ok) {
-        throw new Error('Order submission failed');
+        console.error('Server responded with error:', responseData);
+        throw new Error(responseData.message || 'Order submission failed');
       }
       
-      return await response.json();
+      return responseData;
     } catch (err) {
       console.error('Error submitting order:', err);
-      throw err;
+      throw new Error(`Order submission failed: ${err.message}`);
     }
   }
 }
