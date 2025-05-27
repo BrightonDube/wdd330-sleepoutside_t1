@@ -52,11 +52,28 @@ export default class ProductDetails {
   renderProductDetails() {
     document.title = `Sleep Outside | ${this.product.Name}`; 
     
+    // Check if product is discounted
+    const isDiscounted = this.product.FinalPrice < this.product.SuggestedRetailPrice;
+    let discountBadge = '';
+    let discountPricing = '';
+    
+    if (isDiscounted) {
+      const discountPercentage = Math.round(((this.product.SuggestedRetailPrice - this.product.FinalPrice) / this.product.SuggestedRetailPrice) * 100);
+      discountBadge = `<div class="discount-badge product-detail__discount">-${discountPercentage}%</div>`;
+      discountPricing = `<p class="product-card__original-price">$${this.product.SuggestedRetailPrice.toFixed(2)}</p>`;
+    }
+    
     document.querySelector("#product-detail").innerHTML = `
       <h3>${this.product.Category.charAt(0).toUpperCase()}${this.product.Category.slice(1)}</h3>
       <h2 class="divider">${this.product.NameWithoutBrand}</h2>
-      <img class="divider" src="${this.product.Images.PrimaryLarge}" alt="${this.product.Name}" />
-      <p class="product-card__price">$${this.product.FinalPrice}</p>
+      <div class="product-image-container">
+        ${discountBadge}
+        <img class="divider" src="${this.product.Images.PrimaryLarge}" alt="${this.product.Name}" />
+      </div>
+      <div class="product-detail__price-container">
+        <p class="product-card__price">$${this.product.FinalPrice.toFixed(2)}</p>
+        ${discountPricing}
+      </div>
       <p class="product__color">${this.product.Colors[0].ColorName}</p>
       <p class="product__description">${this.product.DescriptionHtmlSimple}</p>
       <div class="product-detail__add">
