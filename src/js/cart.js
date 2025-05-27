@@ -26,17 +26,25 @@ function removeFromCart(id) {
 function renderCartContents() {
   // Get cart items from localStorage
   const cartItems = getLocalStorage("so-cart");
-
-  // Check if cartItems exists and is an array before trying to map
-  if (cartItems && Array.isArray(cartItems)) {
+  const productListElement = document.querySelector(".product-list");
+  const cartTotalElement = document.querySelector(".cart-total");
+  
+  // Handle empty cart gracefully
+  if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
+    // Show empty cart message
+    productListElement.innerHTML = `<li class="empty-cart-message">Your cart is empty</li>`;
+    cartTotalElement.innerHTML = `<p>Total: $0.00</p>`;
+    return; // Exit function early
+  }
+  
+  // If we have items, render them
+  try {
     const htmlItems = cartItems.map((item) => cartItemTemplate(item));
-    document.querySelector(".product-list").innerHTML = htmlItems.join("");
-    // Calculate and show the total price or show a message 
-    if (cartItems.length > 0) {
-      totalPrice(cartItems);
-    } else {
-      document.querySelector(".cart-total").innerHTML = `Your Cart is empty`
-    }
+    productListElement.innerHTML = htmlItems.join("");
+    
+    // Calculate and show the total price
+    totalPrice(cartItems);
+    
     // Add event listeners to all remove buttons
     document.querySelectorAll(".remove-from-cart").forEach((btn) => {
       btn.addEventListener("click", function () {
@@ -45,8 +53,10 @@ function renderCartContents() {
         updateCartCount();
       });
     });
-  } else {
-    document.querySelector(".product-list").innerHTML = "";
+  } catch (error) {
+    console.error('Error rendering cart contents:', error);
+    productListElement.innerHTML = `<li class="empty-cart-message">There was a problem displaying your cart</li>`;
+    cartTotalElement.innerHTML = `<p>Total: $0.00</p>`;
   }
 }
 

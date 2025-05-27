@@ -385,6 +385,17 @@ button {
   margin-right: 80px;
 }
 
+.empty-cart-message {
+  display: block;
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: var(--dark-grey);
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
 @media screen and (min-width: 500px) {
   body {
     max-width: 1080px;
