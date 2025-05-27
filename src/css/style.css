@@ -1027,3 +1027,36 @@ main button.checkout:hover a {
     font-size: 1.5rem;
   }
 }
+
+/* Checkout Status Messages */
+.checkout-status {
+  margin: 1.5rem 0;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.status-message {
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.status-message.processing {
+  background-color: #e8f4fd;
+  color: #0269d9;
+  border-left: 4px solid #0269d9;
+}
+
+.status-message.success {
+  background-color: #e6f7e6;
+  color: #2e7d32;
+  border-left: 4px solid #2e7d32;
+}
+
+.status-message.error {
+  background-color: #fdeded;
+  color: #d32f2f;
+  border-left: 4px solid #d32f2f;
+}
