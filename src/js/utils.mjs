@@ -63,9 +63,26 @@ export async function updateCartCount() {
   const cart = getLocalStorage("so-cart");
   const count = Array.isArray(cart) ? cart.length : 0;
   const cartCountElem = document.getElementById("cart-count");
-  cartCountElem.textContent = count > 0 ? count : "";
-  cartCountElem.style.background = "#8A470C";
-  cartCountElem.style.color = "#fff";
-  cartCountElem.style.display = count > 0 ? "inline-block" : "none";
-
+  
+  // Check if cart count element exists in the DOM
+  if (cartCountElem) {
+    // Update cart count text and display
+    cartCountElem.textContent = count > 0 ? count : "";
+    cartCountElem.style.display = count > 0 ? "inline-block" : "none";
+    
+    // Set badge styling
+    cartCountElem.style.backgroundColor = "#8a470c";
+    cartCountElem.style.color = "white";
+    cartCountElem.style.borderRadius = "50%";
+    cartCountElem.style.padding = "0 6px";
+    cartCountElem.style.fontWeight = "bold";
+    cartCountElem.style.minWidth = "18px";
+    cartCountElem.style.textAlign = "center";
+    
+    // Add bounce animation when count changes
+    cartCountElem.classList.add("cart-bounce");
+    setTimeout(() => {
+      cartCountElem.classList.remove("cart-bounce");
+    }, 400);
+  }
 }

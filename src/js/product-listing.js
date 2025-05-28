@@ -1,35 +1,30 @@
-// Import ProductData module
-import ProductData from "./ProductData.mjs";
-import ProductList from "./ProductList.mjs";
-import { loadHeaderFooter, getParam, getLocalStorage } from "./utils.mjs";
+import ExternalServices from './ExternalServices.mjs';
+import ProductList from './ProductList.mjs';
+import { loadHeaderFooter, getParam } from './utils.mjs';
 
-function updateCartCount() {
-  const cart = getLocalStorage("so-cart");
-  const count = Array.isArray(cart) ? cart.length : 0;
-  const cartCountElem = document.getElementById("cart-count");
-  if (cartCountElem) {
-    cartCountElem.textContent = count > 0 ? count : "";
-    cartCountElem.style.background = "#8A470C";
-    cartCountElem.style.color = "#fff";
-    cartCountElem.style.display = count > 0 ? "inline-block" : "none";
-  }
-}
-const category = getParam('category');
-document.querySelector(".top-products").textContent = `Top Products: ${category.charAt(0).toUpperCase()}${category.slice(1)}`;
-// Create an instance of ProductData
-const productData = new ProductData();
-// Get the element where we'll render the product list
-const listElement = document.querySelector(".product-list");
-// Create an instance of ProductList and initialize it
-const productList = new ProductList(category, productData, listElement);
-productList.init();
-// Call updateCartCount after DOM is loaded, it is async because the header comes from other file, so we need to wait for render it
-window.addEventListener("DOMContentLoaded", async () => {
-  try{
-   await loadHeaderFooter();
-   updateCartCount();
-  }catch(e){
-    console.log(e);
+// Initialize the page when DOM is loaded
+window.addEventListener('DOMContentLoaded', async () => {
+  // Load header and footer
+  await loadHeaderFooter();
+  
+  // Get the category from the URL parameter
+  const category = getParam('category');
+  
+  // Set the page title with the category name if available
+  if (category) {
+    document.querySelector('.top-products').textContent = 
+      `Top Products: ${category.charAt(0).toUpperCase()}${category.slice(1)}`;
   }
   
+  // First create an instance of the ExternalServices class
+  const dataSource = new ExternalServices();
+  
+  // Then get the element you want the product list to render in
+  const listElement = document.querySelector('.product-list');
+  
+  // Then create an instance of the ProductList class and send it the correct information
+  const myList = new ProductList(category, dataSource, listElement);
+  
+  // Finally call the init method to show the products
+  myList.init();
 });
