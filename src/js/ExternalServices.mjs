@@ -28,6 +28,18 @@ export default class ExternalServices {
     }
   }
 
+  // Search products by query
+  async searchProducts(query) {
+    try {
+      const response = await fetch(`${baseURL}products/search?q=${encodeURIComponent(query)}`);
+      const data = await this.convertToJson(response);
+      return data.Result || [];
+    } catch (err) {
+      console.error('Error searching products:', err);
+      throw err;
+    }
+  }
+
   // Get product by ID
   async getProductById(id) {
     try {
@@ -36,6 +48,18 @@ export default class ExternalServices {
       return data.Result;
     } catch (err) {
       console.error(`Error getting product with ID ${id}:`, err);
+      throw err;
+    }
+  }
+  
+  // Get all product categories
+  async getCategories() {
+    try {
+      const response = await fetch(`${baseURL}categories`);
+      const data = await this.convertToJson(response);
+      return data.Result;
+    } catch (err) {
+      console.error('Error getting categories:', err);
       throw err;
     }
   }

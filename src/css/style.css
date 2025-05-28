@@ -40,21 +40,113 @@ img {
 header {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 p {
   padding: 0.75rem;
 }
 
+/* Search Form Styles */
+.search-container {
+  flex: 1;
+  max-width: 500px;
+  margin: 0 1rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+#searchForm {
+  display: flex;
+  width: 100%;
+}
+
+#search {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--light-grey);
+  border-radius: 25px 0 0 25px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+#search:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(240, 168, 104, 0.3);
+}
+
+#searchForm button {
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 0 25px 25px 0;
+  padding: 0 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  height: 44px; /* Match input height */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+#searchForm button:hover {
+  background-color: var(--tertiary-color);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#searchForm button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+#searchForm button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+#searchForm button:active::after {
+  width: 200px;
+  height: 200px;
+  opacity: 0;
+}
+
+#searchForm button svg {
+  fill: white;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s ease;
+}
+
+#searchForm button:hover svg {
+  transform: scale(1.1);
+}
+
 .logo {
   line-height: 60px;
-  width: 245px;
+  min-width: 180px;
   overflow: hidden;
   display: flex;
   font-size: 30px;
   text-align: right;
   font-family: var(--font-headline);
+  flex-shrink: 0;
 }
 
 .logo img {
@@ -371,10 +463,11 @@ button {
   grid-column: 3;
 }
 
-.cart-card.divider {
+.cart-card.divide.cart {
   position: relative;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   justify-content: space-between;
 }
 
@@ -996,12 +1089,23 @@ main button.checkout:hover a {
   }
 }
 
-@media (max-width: 768px) {
-  .category-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+@media (max-width: 992px) {
+  .search-container {
+    order: 3;
+    flex: 0 0 100%;
+    margin: 1rem 0 0 0;
+    max-width: 100%;
   }
   
+  .logo {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .featured-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1010,6 +1114,67 @@ main button.checkout:hover a {
   .featured-products h2 {
     font-size: 1.75rem;
   }
+}
+
+/* Search Results Styles */
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.no-results p {
+  color: var(--dark-grey);
+  margin-bottom: 1rem;
+}
+
+.no-results a {
+  color: var(--primary-color);
+  text-decoration: underline;
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.no-results a:hover {
+  color: var(--tertiary-color);
+}
+
+/* Loading and error states */
+.loading {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  color: var(--dark-grey);
+  font-style: italic;
+}
+
+.error-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  background-color: #ffebee;
+  border-left: 4px solid #f44336;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+.error-message p {
+  color: #d32f2f;
+  margin: 0;
+  padding: 0;
+}
+
+/* Search results header */
+.top-products {
+  grid-column: 1 / -1;
+  font-size: 1.5rem;
+  margin: 0 0 1.5rem;
+  color: var(--dark-grey);
+  font-weight: 600;
+  padding: 0 0.5rem;
 }
 
 @media (max-width: 480px) {

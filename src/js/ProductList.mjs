@@ -36,28 +36,203 @@ export default class ProductList {
     this.category = category;
     this.dataSource = dataSource;
     this.listElement = listElement;
+    this.allProducts = [];
   }
 
   async init() {
     try {
-      // Get the data from the dataSource using the correct method name
-      const list = await this.dataSource.getProductsByCategory(this.category);
-      // Render the list
-      this.renderList(list);
+      // Get the search query from URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchQuery = urlParams.get('search');
+      
+      // If there's a search query, perform a search
+      if (searchQuery) {
+        await this.performSearch(searchQuery);
+      } 
+      // Otherwise, load products by category
+      else if (this.category) {
+        await this.loadProductsByCategory();
+      } 
+      // If no category or search, show all products
+      else {
+        await this.loadAllProducts();
+      }
+      
+      // Set up event listeners for search if on the product listing page
+      this.setupSearchListener();
+      
     } catch (error) {
       console.error('Error initializing product list:', error);
       // Show error message to the user
       this.listElement.innerHTML = '<p class="error-message">Error loading products. Please try again later.</p>';
     }
   }
+  
+  async loadProductsByCategory() {
+    this.allProducts = await this.dataSource.getProductsByCategory(this.category);
+    this.renderList(this.allProducts);
+  }
+  
+  async loadAllProducts() {
+    // Get unique categories first
+    const categories = await this.dataSource.getCategories();
+    
+    // Fetch products from all categories
+    const productsPromises = categories.map(category => 
+      this.dataSource.getProductsByCategory(category.Id)
+    );
+    
+    const productsByCategory = await Promise.all(productsPromises);
+    
+    // Flatten the array of arrays into a single array of products
+    this.allProducts = productsByCategory.flat();
+    
+    // Remove duplicates based on product ID
+    const uniqueProducts = [];
+    const productIds = new Set();
+    
+    this.allProducts.forEach(product => {
+      if (!productIds.has(product.Id)) {
+        productIds.add(product.Id);
+        uniqueProducts.push(product);
+      }
+    });
+    
+    this.allProducts = uniqueProducts;
+    this.renderList(this.allProducts);
+  }
+  
+  async performSearch(query) {
+    try {
+      const searchTerm = query.trim();
+      
+      if (!searchTerm) {
+        // If search is empty, show all products if we have them
+        if (this.allProducts.length > 0) {
+          this.renderList(this.allProducts);
+        } else {
+          await this.loadAllProducts();
+        }
+        return;
+      }
+      
+      // Show loading state
+      this.listElement.innerHTML = '<div class="loading">Searching products...</div>';
+      
+      try {
+        // Use the server-side search endpoint
+        const results = await this.dataSource.searchProducts(searchTerm);
+        
+        // Update the page title to show search results
+        const titleElement = document.querySelector('.top-products');
+        if (titleElement) {
+          titleElement.textContent = `Search Results for "${searchTerm}"`;
+        }
+        
+        // Render the search results
+        if (results && results.length > 0) {
+          this.renderList(results);
+        } else {
+          this.listElement.innerHTML = `
+            <div class="no-results">
+              <p>No products found for "${searchTerm}".</p>
+              <p>Try different keywords or browse our <a href="/product-listing/index.html">full catalog</a>.</p>
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('Search error:', error);
+        // Fallback to client-side search if server search fails
+        console.log('Falling back to client-side search');
+        await this.fallbackClientSideSearch(searchTerm);
+      }
+      
+    } catch (error) {
+      console.error('Error performing search:', error);
+      this.listElement.innerHTML = '<p class="error-message">Error performing search. Please try again later.</p>';
+    }
+  }
+  
+  setupSearchListener() {
+    // If we're on the product listing page, set up the search form
+    const searchForm = document.getElementById('searchForm');
+    if (searchForm) {
+      searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const searchInput = searchForm.querySelector('input[type="search"]');
+        const searchTerm = searchInput.value.trim();
+        
+        if (searchTerm) {
+          // Update the URL with the search term without reloading the page
+          const url = new URL(window.location);
+          url.searchParams.set('search', searchTerm);
+          window.history.pushState({}, '', url);
+          
+          // Perform the search
+          this.performSearch(searchTerm);
+        }
+      });
+    }
+  }
+
+  async fallbackClientSideSearch(searchTerm) {
+    try {
+      // Load all products if we haven't already
+      if (this.allProducts.length === 0) {
+        await this.loadAllProducts();
+      }
+      
+      const searchTermLower = searchTerm.toLowerCase().trim();
+      
+      if (!searchTermLower) {
+        this.renderList(this.allProducts);
+        return;
+      }
+      
+      // Filter products based on search term
+      const filteredProducts = this.allProducts.filter(product => {
+        // Search in product name, brand, and category
+        const searchText = `${product.Name} ${product.Brand?.Name || ''} ${product.Category?.Name || ''}`.toLowerCase();
+        return searchText.includes(searchTermLower);
+      });
+      
+      // Update the page title to show search results
+      const titleElement = document.querySelector('.top-products');
+      if (titleElement) {
+        titleElement.textContent = `Search Results for "${searchTerm}"`;
+      }
+      
+      // Render the filtered list
+      if (filteredProducts.length > 0) {
+        this.renderList(filteredProducts);
+      } else {
+        this.listElement.innerHTML = `
+          <div class="no-results">
+            <p>No products found for "${searchTerm}".</p>
+            <p>Try different keywords or browse our <a href="/product-listing/index.html">full catalog</a>.</p>
+          </div>
+        `;
+      }
+    } catch (error) {
+      console.error('Fallback search error:', error);
+      this.listElement.innerHTML = `
+        <div class="error-message">
+          <p>Unable to perform search. Please try again later.</p>
+        </div>
+      `;
+    }
+  }
 
   renderList(list) {
+    // Clear any existing content
+    this.listElement.innerHTML = '';
+    
     // Use the utility function to render the list
     renderListWithTemplate(
       productCardTemplate,
       this.listElement,
       list,
-      "afterbegin",
+      "beforeend",
       true
     );
   }
