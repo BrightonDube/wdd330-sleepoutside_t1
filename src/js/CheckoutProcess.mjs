@@ -147,28 +147,101 @@ export default class CheckoutProcess {
 
   // Process the checkout form and submit the order
   async checkout(form) {
-    // Get form data as JSON
-    const formData = this.formDataToJSON(form);
-    
-    // Prepare the order object with all required fields
-    const order = {
-      orderDate: new Date().toISOString(),
-      fname: formData.fname,
-      lname: formData.lname,
-      street: formData.street,
-      city: formData.city,
-      state: formData.state,
-      zip: formData.zip,
-      cardNumber: formData.cardNumber ? formData.cardNumber.replace(/\D/g, '') : '',
-      expiration: formData.expiration ? formData.expiration.replace(/[^\d/]/g, '') : '',
-      code: formData.code ? formData.code.replace(/\D/g, '') : '',
-      items: this.packageItems(this.list),
-      orderTotal: parseFloat(this.orderTotal).toFixed(2),
-      shipping: parseFloat(this.shipping).toFixed(2),
-      tax: parseFloat(this.tax).toFixed(2)
-    };
-    
-    console.log('Prepared order object:', JSON.stringify(order, null, 2));
-    return order;
+    try {
+      // Validate that we have items in the cart
+      if (!this.list || !Array.isArray(this.list) || this.list.length === 0) {
+        throw { 
+          name: 'ValidationError',
+          message: 'Your cart is empty',
+          details: 'Cannot proceed with checkout: no items in cart'
+        };
+      }
+
+      // Get form data as JSON
+      const formData = this.formDataToJSON(form);
+      
+      // Validate required fields
+      const requiredFields = ['fname', 'lname', 'street', 'city', 'state', 'zip', 'cardNumber', 'expiration', 'code'];
+      const missingFields = requiredFields.filter(field => !formData[field]?.trim());
+      
+      if (missingFields.length > 0) {
+        throw {
+          name: 'ValidationError',
+          message: 'Missing required fields',
+          details: `The following fields are required: ${missingFields.join(', ')}`,
+          fields: missingFields
+        };
+      }
+      
+      // Validate credit card expiration date format (MM/YY)
+      const expRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
+      if (!expRegex.test(formData.expiration)) {
+        throw {
+          name: 'ValidationError',
+          message: 'Invalid expiration date',
+          details: 'Please enter a valid expiration date in MM/YY format',
+          field: 'expiration'
+        };
+      }
+      
+      // Validate credit card number (basic validation)
+      const cardNumber = formData.cardNumber.replace(/\D/g, '');
+      if (cardNumber.length < 13 || cardNumber.length > 19) {
+        throw {
+          name: 'ValidationError',
+          message: 'Invalid card number',
+          details: 'Please enter a valid credit card number',
+          field: 'cardNumber'
+        };
+      }
+      
+      // Validate CVV
+      const cvv = formData.code.replace(/\D/g, '');
+      if (cvv.length < 3 || cvv.length > 4) {
+        throw {
+          name: 'ValidationError',
+          message: 'Invalid security code',
+          details: 'Please enter a valid 3 or 4 digit security code',
+          field: 'code'
+        };
+      }
+      
+      // Prepare the order object with all required fields
+      const order = {
+        orderDate: new Date().toISOString(),
+        fname: formData.fname.trim(),
+        lname: formData.lname.trim(),
+        street: formData.street.trim(),
+        city: formData.city.trim(),
+        state: formData.state.trim(),
+        zip: formData.zip.trim(),
+        cardNumber: cardNumber,
+        expiration: formData.expiration.replace(/[^\d/]/g, ''),
+        code: cvv,
+        items: this.packageItems(this.list),
+        orderTotal: parseFloat(this.orderTotal).toFixed(2),
+        shipping: parseFloat(this.shipping).toFixed(2),
+        tax: parseFloat(this.tax).toFixed(2)
+      };
+      
+      console.log('Prepared order object:', JSON.stringify(order, null, 2));
+      return order;
+      
+    } catch (error) {
+      console.error('Error in CheckoutProcess.checkout:', error);
+      
+      // If it's already a properly formatted error, just re-throw it
+      if (error.name === 'ValidationError' || error.name === 'servicesError' || error.name === 'parseError') {
+        throw error;
+      }
+      
+      // Otherwise, wrap it in a standard error format
+      throw {
+        name: 'CheckoutError',
+        message: error.message || 'An error occurred during checkout',
+        details: error.details || error.toString(),
+        originalError: error
+      };
+    }
   }
 }
