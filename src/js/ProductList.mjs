@@ -58,9 +58,9 @@ export default class ProductList {
         await this.loadAllProducts();
       }
       
-      // Set up event listeners for search if on the product listing page
+      // Set up event listeners [Added SortingListener] for search if on the product listing page
       this.setupSearchListener();
-      
+      this.setupSortingListeners();    
     } catch (error) {
       console.error('Error initializing product list:', error);
       // Show error message to the user
@@ -235,5 +235,26 @@ export default class ProductList {
       "beforeend",
       true
     );
+  }
+
+  // Additional functionality for sorting products
+  setupSortingListeners() {
+    const sortNameBtn = document.getElementById("sortName");
+    const sortPriceBtn = document.getElementById("sortPrice");
+    if (sortNameBtn) {
+      sortNameBtn.addEventListener("click", () => this.sortProducts("name"));
+    }
+    if (sortPriceBtn) {
+      sortPriceBtn.addEventListener("click", () => this.sortProducts("price"));
+    }
+  }
+
+  sortProducts(criteria) {
+    if (criteria === "name") {
+      this.allProducts.sort((a, b) => a.Name.localeCompare(b.Name));
+    } else if (criteria === "price") {
+      this.allProducts.sort((a, b) => a.FinalPrice - b.FinalPrice);
+    }
+    this.renderList(this.allProducts);
   }
 }
