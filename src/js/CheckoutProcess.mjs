@@ -28,24 +28,21 @@ export default class CheckoutProcess {
       return;
     }
 
-    // Calculate item count and subtotal
+    // Reset totals
     let itemCount = 0;
     this.itemTotal = 0;
 
     if (this.list && Array.isArray(this.list) && this.list.length > 0) {
-      itemCount = this.list.length;
-      
-      // Sum up the prices of all items
+      // Calculate total items and subtotal considering quantities
       this.list.forEach((item) => {
-        // Use FinalPrice if available, otherwise ListPrice
-        const price = item.FinalPrice || item.ListPrice;
-        this.itemTotal += price;
+        const quantity = item.quantity || 1;
+        const price = item.FinalPrice || item.ListPrice || 0;
+        this.itemTotal += price * quantity;
+        itemCount += quantity;
       });
       
-      // Set item count
+      // Update the UI
       itemNumElement.textContent = itemCount;
-      
-      // Set item total
       summaryElement.textContent = `$${this.itemTotal.toFixed(2)}`;
     } else {
       // Handle empty cart
@@ -68,22 +65,40 @@ export default class CheckoutProcess {
     if (submitButton) {
       submitButton.disabled = true;
       submitButton.textContent = 'Cart Empty';
+      submitButton.classList.add('disabled');
+    }
+    
+    // Show empty cart message
+    const emptyCartMessage = document.createElement('div');
+    emptyCartMessage.className = 'empty-cart-message';
+    emptyCartMessage.innerHTML = `
+      <p>Your cart is empty</p>
+      <a href="/index.html" class="btn continue-shopping">Continue Shopping</a>
+    `;
+    
+    const orderSummary = document.querySelector(this.outputSelector);
+    if (orderSummary) {
+      orderSummary.innerHTML = '';
+      orderSummary.appendChild(emptyCartMessage);
     }
   }
 
   calculateOrderTotal() {
-    // Calculate the tax and shipping amounts
-    // Tax: 6% of subtotal
+    // Calculate tax (6% of subtotal)
     this.tax = this.itemTotal * 0.06;
 
-    // Shipping: $10 for first item + $2 for each additional item
+    // Calculate shipping based on total quantity of items
+    this.shipping = 0;
     if (this.list && Array.isArray(this.list) && this.list.length > 0) {
-      this.shipping = 10; // Base shipping for first item
-      if (this.list.length > 1) {
-        this.shipping += (this.list.length - 1) * 2; // Add $2 for each additional item
+      let totalQuantity = 0;
+      this.list.forEach(item => {
+        totalQuantity += item.quantity || 1;
+      });
+
+      if (totalQuantity > 0) {
+        // $10 for the first item, $2 for each additional item
+        this.shipping = 10 + (Math.max(0, totalQuantity - 1) * 2);
       }
-    } else {
-      this.shipping = 0;
     }
 
     // Calculate order total
@@ -221,7 +236,9 @@ export default class CheckoutProcess {
         items: this.packageItems(this.list),
         orderTotal: parseFloat(this.orderTotal).toFixed(2),
         shipping: parseFloat(this.shipping).toFixed(2),
-        tax: parseFloat(this.tax).toFixed(2)
+        tax: parseFloat(this.tax).toFixed(2),
+        subtotal: parseFloat(this.itemTotal).toFixed(2),
+        itemCount: this.list.reduce((total, item) => total + (item.quantity || 1), 0)
       };
       
       console.log('Prepared order object:', JSON.stringify(order, null, 2));
