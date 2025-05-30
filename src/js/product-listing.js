@@ -27,4 +27,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   
   // Finally call the init method to show the products
   myList.init();
+  
+  
 });

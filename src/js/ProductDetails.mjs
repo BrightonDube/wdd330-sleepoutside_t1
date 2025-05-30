@@ -22,6 +22,7 @@ export default class ProductDetails {
     this.product = await this.dataSource.getProductById(this.productId);
     if (this.product) {
       this.renderProductDetails();
+      document.querySelector('.breadcrumbs').innerHTML = `Product Category ->${this.product.Category.charAt(0).toUpperCase()}${this.product.Category.slice(1)}`
       // Add event listener to Add to Cart button
       document
         .getElementById("addToCart")
