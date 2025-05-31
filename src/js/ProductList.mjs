@@ -69,37 +69,85 @@ export default class ProductList {
   }
   
   async loadProductsByCategory() {
-    this.allProducts = await this.dataSource.getProductsByCategory(this.category);
-    this.renderList(this.allProducts);
+    try {
+      this.allProducts = await this.dataSource.getProductsByCategory(this.category);
+      this.renderList(this.allProducts);
+      
+      // If no products found, show a message
+      if (this.allProducts.length === 0) {
+        this.listElement.innerHTML = `
+          <div class="no-results">
+            <p>No products found in this category.</p>
+            <p>Browse our <a href="/product-listing/index.html">full catalog</a> for more options.</p>
+          </div>
+        `;
+      }
+    } catch (error) {
+      console.error('Error loading products by category:', error);
+      this.listElement.innerHTML = `
+        <div class="error-message">
+          <p>Unable to load products. Using limited local data instead.</p>
+          <p>Some features may be limited.</p>
+        </div>
+      `;
+      
+      // Still try to show something useful
+      this.allProducts = [];
+      this.renderList(this.allProducts);
+    }
   }
   
   async loadAllProducts() {
-    // Get unique categories first
-    const categories = await this.dataSource.getCategories();
-    
-    // Fetch products from all categories
-    const productsPromises = categories.map(category => 
-      this.dataSource.getProductsByCategory(category.Id)
-    );
-    
-    const productsByCategory = await Promise.all(productsPromises);
-    
-    // Flatten the array of arrays into a single array of products
-    this.allProducts = productsByCategory.flat();
-    
-    // Remove duplicates based on product ID
-    const uniqueProducts = [];
-    const productIds = new Set();
-    
-    this.allProducts.forEach(product => {
-      if (!productIds.has(product.Id)) {
-        productIds.add(product.Id);
-        uniqueProducts.push(product);
+    try {
+      // Get unique categories first
+      const categories = await this.dataSource.getCategories();
+      
+      // Fetch products from all categories
+      const productsPromises = categories.map(category => 
+        this.dataSource.getProductsByCategory(category.Id)
+      );
+      
+      const productsByCategory = await Promise.all(productsPromises);
+      
+      // Flatten the array of arrays into a single array of products
+      this.allProducts = productsByCategory.flat();
+      
+      // Remove duplicates based on product ID
+      const uniqueProducts = [];
+      const productIds = new Set();
+      
+      this.allProducts.forEach(product => {
+        if (product && product.Id && !productIds.has(product.Id)) {
+          productIds.add(product.Id);
+          uniqueProducts.push(product);
+        }
+      });
+      
+      this.allProducts = uniqueProducts;
+      this.renderList(this.allProducts);
+      
+      // If no products found, show a message
+      if (this.allProducts.length === 0) {
+        this.listElement.innerHTML = `
+          <div class="no-results">
+            <p>No products found.</p>
+            <p>Please check back later or contact support if the issue persists.</p>
+          </div>
+        `;
       }
-    });
-    
-    this.allProducts = uniqueProducts;
-    this.renderList(this.allProducts);
+    } catch (error) {
+      console.error('Error loading all products:', error);
+      this.listElement.innerHTML = `
+        <div class="error-message">
+          <p>Unable to load products. Using limited local data instead.</p>
+          <p>Some features may be limited.</p>
+        </div>
+      `;
+      
+      // Still try to show something useful
+      this.allProducts = [];
+      this.renderList(this.allProducts);
+    }
   }
   
   async performSearch(query) {
@@ -107,12 +155,8 @@ export default class ProductList {
       const searchTerm = query.trim();
       
       if (!searchTerm) {
-        // If search is empty, show all products if we have them
-        if (this.allProducts.length > 0) {
-          this.renderList(this.allProducts);
-        } else {
-          await this.loadAllProducts();
-        }
+        // If search is empty, show all products
+        await this.loadAllProducts();
         return;
       }
       
@@ -120,7 +164,7 @@ export default class ProductList {
       this.listElement.innerHTML = '<div class="loading">Searching products...</div>';
       
       try {
-        // Use the server-side search endpoint
+        // Try to use server-side search first
         const results = await this.dataSource.searchProducts(searchTerm);
         
         // Update the page title to show search results
@@ -142,14 +186,33 @@ export default class ProductList {
         }
       } catch (error) {
         console.error('Search error:', error);
+        
+        // Check if this is an authentication error
+        if (error.message === 'Authentication required') {
+          console.log('Authentication required, falling back to client-side search');
+          // Show a message that we're using local search
+          const titleElement = document.querySelector('.top-products');
+          if (titleElement) {
+            titleElement.textContent = `Local Search Results for "${searchTerm}"`;
+          }
+        } else {
+          console.log('Server search failed, falling back to client-side search');
+        }
+        
         // Fallback to client-side search if server search fails
-        console.log('Falling back to client-side search');
         await this.fallbackClientSideSearch(searchTerm);
       }
       
     } catch (error) {
       console.error('Error performing search:', error);
-      this.listElement.innerHTML = '<p class="error-message">Error performing search. Please try again later.</p>';
+      this.listElement.innerHTML = `
+        <div class="error-message">
+          <p>Error performing search. ${error.message || 'Please try again later.'}</p>
+          <p>Showing local results instead:</p>
+        </div>
+      `;
+      // Still try to show local results even if there was an error
+      await this.fallbackClientSideSearch(query.trim());
     }
   }
   

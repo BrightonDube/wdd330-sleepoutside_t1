@@ -28,24 +28,21 @@ export default class CheckoutProcess {
       return;
     }
 
-    // Calculate item count and subtotal
+    // Reset totals
     let itemCount = 0;
     this.itemTotal = 0;
 
     if (this.list && Array.isArray(this.list) && this.list.length > 0) {
-      itemCount = this.list.length;
-      
-      // Sum up the prices of all items
+      // Calculate total items and subtotal considering quantities
       this.list.forEach((item) => {
-        // Use FinalPrice if available, otherwise ListPrice
-        const price = item.FinalPrice || item.ListPrice;
-        this.itemTotal += price;
+        const quantity = item.quantity || 1;
+        const price = item.FinalPrice || item.ListPrice || 0;
+        this.itemTotal += price * quantity;
+        itemCount += quantity;
       });
       
-      // Set item count
+      // Update the UI
       itemNumElement.textContent = itemCount;
-      
-      // Set item total
       summaryElement.textContent = `$${this.itemTotal.toFixed(2)}`;
     } else {
       // Handle empty cart
@@ -68,22 +65,40 @@ export default class CheckoutProcess {
     if (submitButton) {
       submitButton.disabled = true;
       submitButton.textContent = 'Cart Empty';
+      submitButton.classList.add('disabled');
+    }
+    
+    // Show empty cart message
+    const emptyCartMessage = document.createElement('div');
+    emptyCartMessage.className = 'empty-cart-message';
+    emptyCartMessage.innerHTML = `
+      <p>Your cart is empty</p>
+      <a href="/index.html" class="btn continue-shopping">Continue Shopping</a>
+    `;
+    
+    const orderSummary = document.querySelector(this.outputSelector);
+    if (orderSummary) {
+      orderSummary.innerHTML = '';
+      orderSummary.appendChild(emptyCartMessage);
     }
   }
 
   calculateOrderTotal() {
-    // Calculate the tax and shipping amounts
-    // Tax: 6% of subtotal
+    // Calculate tax (6% of subtotal)
     this.tax = this.itemTotal * 0.06;
 
-    // Shipping: $10 for first item + $2 for each additional item
+    // Calculate shipping based on total quantity of items
+    this.shipping = 0;
     if (this.list && Array.isArray(this.list) && this.list.length > 0) {
-      this.shipping = 10; // Base shipping for first item
-      if (this.list.length > 1) {
-        this.shipping += (this.list.length - 1) * 2; // Add $2 for each additional item
+      let totalQuantity = 0;
+      this.list.forEach(item => {
+        totalQuantity += item.quantity || 1;
+      });
+
+      if (totalQuantity > 0) {
+        // $10 for the first item, $2 for each additional item
+        this.shipping = 10 + (Math.max(0, totalQuantity - 1) * 2);
       }
-    } else {
-      this.shipping = 0;
     }
 
     // Calculate order total
@@ -147,28 +162,103 @@ export default class CheckoutProcess {
 
   // Process the checkout form and submit the order
   async checkout(form) {
-    // Get form data as JSON
-    const formData = this.formDataToJSON(form);
-    
-    // Prepare the order object with all required fields
-    const order = {
-      orderDate: new Date().toISOString(),
-      fname: formData.fname,
-      lname: formData.lname,
-      street: formData.street,
-      city: formData.city,
-      state: formData.state,
-      zip: formData.zip,
-      cardNumber: formData.cardNumber ? formData.cardNumber.replace(/\D/g, '') : '',
-      expiration: formData.expiration ? formData.expiration.replace(/[^\d/]/g, '') : '',
-      code: formData.code ? formData.code.replace(/\D/g, '') : '',
-      items: this.packageItems(this.list),
-      orderTotal: parseFloat(this.orderTotal).toFixed(2),
-      shipping: parseFloat(this.shipping).toFixed(2),
-      tax: parseFloat(this.tax).toFixed(2)
-    };
-    
-    console.log('Prepared order object:', JSON.stringify(order, null, 2));
-    return order;
+    try {
+      // Validate that we have items in the cart
+      if (!this.list || !Array.isArray(this.list) || this.list.length === 0) {
+        throw { 
+          name: 'ValidationError',
+          message: 'Your cart is empty',
+          details: 'Cannot proceed with checkout: no items in cart'
+        };
+      }
+
+      // Get form data as JSON
+      const formData = this.formDataToJSON(form);
+      
+      // Validate required fields
+      const requiredFields = ['fname', 'lname', 'street', 'city', 'state', 'zip', 'cardNumber', 'expiration', 'code'];
+      const missingFields = requiredFields.filter(field => !formData[field]?.trim());
+      
+      if (missingFields.length > 0) {
+        throw {
+          name: 'ValidationError',
+          message: 'Missing required fields',
+          details: `The following fields are required: ${missingFields.join(', ')}`,
+          fields: missingFields
+        };
+      }
+      
+      // Validate credit card expiration date format (MM/YY)
+      const expRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
+      if (!expRegex.test(formData.expiration)) {
+        throw {
+          name: 'ValidationError',
+          message: 'Invalid expiration date',
+          details: 'Please enter a valid expiration date in MM/YY format',
+          field: 'expiration'
+        };
+      }
+      
+      // Validate credit card number (basic validation)
+      const cardNumber = formData.cardNumber.replace(/\D/g, '');
+      if (cardNumber.length < 13 || cardNumber.length > 19) {
+        throw {
+          name: 'ValidationError',
+          message: 'Invalid card number',
+          details: 'Please enter a valid credit card number',
+          field: 'cardNumber'
+        };
+      }
+      
+      // Validate CVV
+      const cvv = formData.code.replace(/\D/g, '');
+      if (cvv.length < 3 || cvv.length > 4) {
+        throw {
+          name: 'ValidationError',
+          message: 'Invalid security code',
+          details: 'Please enter a valid 3 or 4 digit security code',
+          field: 'code'
+        };
+      }
+      
+      // Prepare the order object with all required fields
+      const order = {
+        orderDate: new Date().toISOString(),
+        fname: formData.fname.trim(),
+        lname: formData.lname.trim(),
+        street: formData.street.trim(),
+        city: formData.city.trim(),
+        state: formData.state.trim(),
+        zip: formData.zip.trim(),
+        cardNumber: cardNumber,
+        expiration: formData.expiration.replace(/[^\d/]/g, ''),
+        code: cvv,
+        items: this.packageItems(this.list),
+        orderTotal: parseFloat(this.orderTotal).toFixed(2),
+        shipping: parseFloat(this.shipping).toFixed(2),
+        tax: parseFloat(this.tax).toFixed(2),
+        subtotal: parseFloat(this.itemTotal).toFixed(2),
+        itemCount: this.list.reduce((total, item) => total + (item.quantity || 1), 0)
+      };
+      
+      console.log('Prepared order object:', JSON.stringify(order, null, 2));
+      return order;
+      
+    } catch (error) {
+      console.error('Error in CheckoutProcess.checkout:', error);
+      
+      // If it's already a properly formatted error, just re-throw it
+      if (error.name === 'ValidationError' || error.name === 'servicesError' || error.name === 'parseError') {
+        throw error;
+      }
+      
+      // Otherwise, wrap it in a standard error format
+      throw {
+        name: 'CheckoutError',
+        message: error.message || 'An error occurred during checkout',
+        details: error.details || error.toString(),
+        originalError: error
+      };
+    }
   }
 }
