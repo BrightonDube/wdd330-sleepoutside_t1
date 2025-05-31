@@ -1,5 +1,30 @@
 import { getLocalStorage, setLocalStorage, loadHeaderFooter, updateCartCount } from "./utils.mjs";
 loadHeaderFooter();
+
+// New addToCart method
+function addToCart(product) {
+  let cart = getLocalStorage("so-cart") || [];
+  
+  // Check if the product is already in the cart by Id
+  const existingItem = cart.find(item => item.Id === product.Id);
+  
+  if (existingItem) {
+    // Increment quantity if item exists
+    existingItem.quantity = (existingItem.quantity || 1) + 1;
+  } else {
+    // Add new item with quantity 1
+    product.quantity = 1;
+    cart.push(product);
+  }
+  
+  // Save updated cart to LocalStorage
+  setLocalStorage("so-cart", cart);
+  
+  // Update cart display and count
+  renderCartContents();
+  updateCartCount();
+}
+
 function calculateItemTotal(price, quantity) {
   return (price * quantity).toFixed(2);
 }
@@ -278,3 +303,6 @@ async function initCart() {
 
 // Start initialization when DOM is loaded
 window.addEventListener('DOMContentLoaded', initCart);
+
+// Export addToCart for use in other modules
+export { addToCart };

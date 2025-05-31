@@ -16,6 +16,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     // Create and initialize the product details
     const product = new ProductDetails(productID, dataSource);
     await product.init();
+
     
     // Update cart count after everything is loaded
     await updateCartCount();

@@ -1,4 +1,5 @@
 import { getLocalStorage, setLocalStorage, alertMessage } from "./utils.mjs";
+import { addToCart } from "./cart.js";
 
 function updateCartCount() {
   const cart = getLocalStorage("so-cart");
@@ -25,24 +26,9 @@ export default class ProductDetails {
       // Add event listener to Add to Cart button
       document
         .getElementById("addToCart")
-        .addEventListener("click", this.addProductToCart.bind(this));
-      updateCartCount();
-    } else {
-      document.querySelector("#product-detail").innerHTML =
-        `<p>Product not found. Please check the URL and try again.</p>`;
-    }
-  }
+        .addEventListener("click", () => {addToCart(this.product);});
 
-  addProductToCart() {
-    let cart = getLocalStorage("so-cart");
-    if (!cart || !Array.isArray(cart)) {
-      cart = [];
-    }
-    cart.push(this.product);
-    setLocalStorage("so-cart", cart);
-    updateCartCount();
-    
-    // Show success message
+        // Show success message
     alertMessage(`${this.product.Name} has been added to your cart!`);
     
     // Visual feedback: animate badge
@@ -51,6 +37,23 @@ export default class ProductDetails {
       cartCountElem.classList.add("cart-bounce");
       setTimeout(() => cartCountElem.classList.remove("cart-bounce"), 400);
     }
+      updateCartCount();
+    } else {
+      document.querySelector("#product-detail").innerHTML =
+        `<p>Product not found. Please check the URL and try again.</p>`;
+    }
+  // }
+
+  // addProductToCart() {
+  //   let cart = getLocalStorage("so-cart");
+  //   if (!cart || !Array.isArray(cart)) {
+  //     cart = [];
+  //   }
+  //   cart.push(this.product);
+  //   setLocalStorage("so-cart", cart);
+  //   updateCartCount();
+    
+    
   }
 
   initializeCarousel() {
