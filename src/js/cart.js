@@ -1,13 +1,19 @@
-import { getLocalStorage, setLocalStorage, loadHeaderFooter, updateCartCount } from "./utils.mjs";
+import {
+  getLocalStorage,
+  setLocalStorage,
+  loadHeaderFooter,
+  updateCartCount,
+} from "./utils.mjs";
 loadHeaderFooter();
 function totalPrice(cartList) {
   let total = 0;
-  cartList.forEach(item => {
+  cartList.forEach((item) => {
     total += item.ListPrice;
   });
   // Format the total to 2 decimal places (nearest cent)
   const formattedTotal = total.toFixed(2);
-  document.querySelector(".cart-total").innerHTML = `<strong>Total: </strong>$${formattedTotal}`
+  document.querySelector(".cart-total").innerHTML =
+    `<strong>Total: </strong>$${formattedTotal}`;
 }
 
 function removeFromCart(id) {
@@ -28,7 +34,7 @@ function renderCartContents() {
   const cartItems = getLocalStorage("so-cart");
   const productListElement = document.querySelector(".product-list");
   const cartTotalElement = document.querySelector(".cart-total");
-  
+
   // Handle empty cart gracefully
   if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
     // Show empty cart message
@@ -36,15 +42,15 @@ function renderCartContents() {
     cartTotalElement.innerHTML = `<p>Total: $0.00</p>`;
     return; // Exit function early
   }
-  
+
   // If we have items, render them
   try {
     const htmlItems = cartItems.map((item) => cartItemTemplate(item));
     productListElement.innerHTML = htmlItems.join("");
-    
+
     // Calculate and show the total price
     totalPrice(cartItems);
-    
+
     // Add event listeners to all remove buttons
     document.querySelectorAll(".remove-from-cart").forEach((btn) => {
       btn.addEventListener("click", function () {
@@ -54,7 +60,7 @@ function renderCartContents() {
       });
     });
   } catch (error) {
-    console.error('Error rendering cart contents:', error);
+    console.error("Error rendering cart contents:", error);
     productListElement.innerHTML = `<li class="empty-cart-message">There was a problem displaying your cart</li>`;
     cartTotalElement.innerHTML = `<p>Total: $0.00</p>`;
   }
@@ -90,16 +96,16 @@ async function initCart() {
   try {
     // Load header and footer first
     await loadHeaderFooter();
-    
+
     // Then update cart count (badge will now exist in DOM)
     await updateCartCount();
-    
+
     // Finally render the cart contents
     renderCartContents();
   } catch (e) {
-    console.error('Error initializing cart:', e);
+    console.error("Error initializing cart:", e);
   }
 }
 
 // Start initialization when DOM is loaded
-window.addEventListener('DOMContentLoaded', initCart);
+window.addEventListener("DOMContentLoaded", initCart);

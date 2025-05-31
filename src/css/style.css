@@ -107,7 +107,7 @@ p {
 }
 
 #searchForm button::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -116,7 +116,9 @@ p {
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: width 0.3s ease, height 0.3s ease;
+  transition:
+    width 0.3s ease,
+    height 0.3s ease;
 }
 
 #searchForm button:active::after {
@@ -189,7 +191,7 @@ p {
   margin-top: -1.3em;
 }
 
-.logo--square>div {
+.logo--square > div {
   margin-top: -1.7em;
 }
 
@@ -491,13 +493,14 @@ button {
   width: 20px;
   height: 20px;
   vertical-align: middle;
-  filter: invert(19%) sepia(67%) saturate(1162%) hue-rotate(7deg) brightness(97%) contrast(97%);
+  filter: invert(19%) sepia(67%) saturate(1162%) hue-rotate(7deg)
+    brightness(97%) contrast(97%);
 }
 
 .cart-footer {
   display: flex;
   justify-content: flex-end;
-  margin: 20px
+  margin: 20px;
 }
 
 .cart-total {
@@ -648,7 +651,7 @@ section.products ul li a {
   border-radius: 4px;
   font-weight: bold;
   font-size: 0.8rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 2;
 }
 
@@ -726,7 +729,7 @@ main button.checkout:hover a {
 }
 
 .checkout main h2::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -747,7 +750,7 @@ main button.checkout:hover a {
 }
 
 .checkout-form h2::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -898,12 +901,12 @@ main button.checkout:hover a {
     padding: 1.5rem;
     margin: 1rem;
   }
-  
+
   .checkout-form form {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .checkout-form h2 {
     font-size: 1.5rem;
   }
@@ -913,11 +916,11 @@ main button.checkout:hover a {
   .checkout-form {
     padding: 1rem;
   }
-  
+
   .checkout-form input {
     padding: 10px;
   }
-  
+
   .checkout-form button {
     padding: 10px;
   }
@@ -940,7 +943,7 @@ main button.checkout:hover a {
 }
 
 .categories h2::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -1015,7 +1018,7 @@ main button.checkout:hover a {
 }
 
 .featured-products h2::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -1083,7 +1086,7 @@ main button.checkout:hover a {
   .category-grid {
     grid-template-columns: repeat(4, 1fr);
   }
-  
+
   .featured-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -1096,7 +1099,7 @@ main button.checkout:hover a {
     margin: 1rem 0 0 0;
     max-width: 100%;
   }
-  
+
   .logo {
     flex: 1;
   }
@@ -1109,7 +1112,7 @@ main button.checkout:hover a {
   .featured-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .categories h2,
   .featured-products h2 {
     font-size: 1.75rem;
@@ -1182,24 +1185,24 @@ main button.checkout:hover a {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .featured-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .category-card {
     display: flex;
     align-items: center;
     text-align: left;
     padding: 1rem;
   }
-  
+
   .category-card img {
     margin: 0 1rem 0 0;
     width: 50px;
     height: 50px;
   }
-  
+
   .categories h2,
   .featured-products h2 {
     font-size: 1.5rem;
@@ -1237,4 +1240,51 @@ main button.checkout:hover a {
   background-color: #fdeded;
   color: #d32f2f;
   border-left: 4px solid #d32f2f;
+}
+
+.banner {
+    position: relative;
+    margin-left: 25%;
+    top: 0;
+    width: 50%;
+    background-color: #ece2ba;
+    color: #333;
+    text-align: center;
+    padding: 15px;
+    font-size: 18px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#register-btn {
+    background-color: #ff5733;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .banner {
+        padding: 10px;
+        font-size: 16px;
+    }
+    
+    #register-btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .banner {
+        padding: 8px;
+        font-size: 14px;
+    }
+    
+    #register-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
 }
