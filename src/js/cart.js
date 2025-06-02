@@ -10,16 +10,6 @@ function calculateItemTotal(price, quantity) {
 }
 
 function totalPrice(cartList) {
-<<<<<<< HEAD
-  let total = 0;
-  cartList.forEach((item) => {
-    total += item.ListPrice;
-  });
-  // Format the total to 2 decimal places (nearest cent)
-  const formattedTotal = total.toFixed(2);
-  document.querySelector(".cart-total").innerHTML =
-    `<strong>Total: </strong>$${formattedTotal}`;
-=======
   let subtotal = 0;
   let itemCount = 0;
   
@@ -57,7 +47,6 @@ function totalPrice(cartList) {
   updateCartCount();
   
   return total.toFixed(2);
->>>>>>> 326b2423b1376fd94236ace3c0bae01eb24830e9
 }
 
 function removeFromCart(id) {
@@ -78,12 +67,8 @@ function renderCartContents() {
   const cartItems = getLocalStorage("so-cart");
   const productListElement = document.querySelector(".product-list");
   const cartTotalElement = document.querySelector(".cart-total");
-<<<<<<< HEAD
-
-=======
   const checkoutButton = document.querySelector(".checkout");
   
->>>>>>> 326b2423b1376fd94236ace3c0bae01eb24830e9
   // Handle empty cart gracefully
   if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
     // Show empty cart message with animation and continue shopping button
@@ -114,16 +99,6 @@ function renderCartContents() {
 
     // Calculate and show the total price
     totalPrice(cartItems);
-<<<<<<< HEAD
-
-    // Add event listeners to all remove buttons
-    document.querySelectorAll(".remove-from-cart").forEach((btn) => {
-      btn.addEventListener("click", function () {
-        const id = this.getAttribute("data-id");
-        removeFromCart(id);
-        updateCartCount();
-      });
-=======
     
     // Add event listeners to all cart controls
     document.querySelectorAll(".cart-card").forEach(card => {
@@ -177,7 +152,6 @@ function renderCartContents() {
           }
         });
       }
->>>>>>> 326b2423b1376fd94236ace3c0bae01eb24830e9
     });
   } catch (error) {
     console.error("Error rendering cart contents:", error);
@@ -278,13 +252,6 @@ async function initCart() {
 
     // Then update cart count (badge will now exist in DOM)
     await updateCartCount();
-<<<<<<< HEAD
-
-    // Finally render the cart contents
-    renderCartContents();
-  } catch (e) {
-    console.error("Error initializing cart:", e);
-=======
     
     // Add a small delay to ensure smooth transition
     setTimeout(() => {
@@ -311,7 +278,6 @@ async function initCart() {
           <a href="/index.html" class="continue-shopping">Continue Shopping</a>
         </li>`;
     }
->>>>>>> 326b2423b1376fd94236ace3c0bae01eb24830e9
   }
 }
 

@@ -107,7 +107,7 @@ p {
 }
 
 #searchForm button::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   left: 50%;
@@ -116,9 +116,7 @@ p {
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition:
-    width 0.3s ease,
-    height 0.3s ease;
+  transition: width 0.3s ease, height 0.3s ease;
 }
 
 #searchForm button:active::after {
@@ -191,7 +189,7 @@ p {
   margin-top: -1.3em;
 }
 
-.logo--square > div {
+.logo--square>div {
   margin-top: -1.7em;
 }
 
@@ -1001,7 +999,7 @@ section.products ul li a {
   border-radius: 4px;
   font-weight: bold;
   font-size: 0.8rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   z-index: 2;
 }
 
@@ -1088,7 +1086,11 @@ main button.checkout:hover a {
 }
 
 .checkout h2::after {
+<<<<<<< HEAD
   content: "";
+=======
+  content: '';
+>>>>>>> 0ce80fd3dd69a5e9a28d79fb9f2c20d2f89053df
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -1099,6 +1101,41 @@ main button.checkout:hover a {
   border-radius: 2px;
 }
 
+<<<<<<< HEAD
+=======
+/* Form Layout */
+.checkout-form {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 2.5rem;
+  margin-top: 2rem;
+}
+
+/* Form Sections */
+.checkout-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Fieldset Styling */
+.checkout-form fieldset {
+  border: none;
+  border-radius: 10px;
+  padding: 2rem;
+  margin: 0;
+  background: #fff;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.checkout-form fieldset:hover {
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+>>>>>>> 0ce80fd3dd69a5e9a28d79fb9f2c20d2f89053df
 .checkout-form legend {
   font-size: 1.4rem;
   font-weight: 600;
@@ -1583,12 +1620,12 @@ button.processing::after {
     padding: 1.5rem;
     margin: 1rem;
   }
-
+  
   .checkout-form form {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-
+  
   .checkout-form h2 {
     font-size: 1.5rem;
   }
@@ -1598,11 +1635,11 @@ button.processing::after {
   .checkout-form {
     padding: 1rem;
   }
-
+  
   .checkout-form input {
     padding: 10px;
   }
-
+  
   .checkout-form button {
     padding: 10px;
   }
@@ -1625,7 +1662,7 @@ button.processing::after {
 }
 
 .categories h2::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -1700,7 +1737,7 @@ button.processing::after {
 }
 
 .featured-products h2::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -1768,7 +1805,7 @@ button.processing::after {
   .category-grid {
     grid-template-columns: repeat(4, 1fr);
   }
-
+  
   .featured-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -1781,7 +1818,7 @@ button.processing::after {
     margin: 1rem 0 0 0;
     max-width: 100%;
   }
-
+  
   .logo {
     flex: 1;
   }
@@ -1794,7 +1831,7 @@ button.processing::after {
   .featured-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-
+  
   .categories h2,
   .featured-products h2 {
     font-size: 1.75rem;
@@ -1983,24 +2020,24 @@ button.processing::after {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-
+  
   .featured-grid {
     grid-template-columns: 1fr;
   }
-
+  
   .category-card {
     display: flex;
     align-items: center;
     text-align: left;
     padding: 1rem;
   }
-
+  
   .category-card img {
     margin: 0 1rem 0 0;
     width: 50px;
     height: 50px;
   }
-
+  
   .categories h2,
   .featured-products h2 {
     font-size: 1.5rem;
@@ -2038,6 +2075,7 @@ button.processing::after {
   background-color: #fdeded;
   color: #d32f2f;
   border-left: 4px solid #d32f2f;
+<<<<<<< HEAD
 }
 
 .banner {
@@ -2209,3 +2247,6 @@ button {
 button:hover {
   background: #0056b3;
 }
+=======
+}
+>>>>>>> 0ce80fd3dd69a5e9a28d79fb9f2c20d2f89053df

@@ -22,6 +22,7 @@ export default class ProductDetails {
     this.product = await this.dataSource.getProductById(this.productId);
     if (this.product) {
       this.renderProductDetails();
+      document.querySelector('.breadcrumbs').innerHTML = `Product Category ->${this.product.Category.charAt(0).toUpperCase()}${this.product.Category.slice(1)}`
       // Add event listener to Add to Cart button
       document
         .getElementById("addToCart")
@@ -41,10 +42,10 @@ export default class ProductDetails {
     cart.push(this.product);
     setLocalStorage("so-cart", cart);
     updateCartCount();
-    
+
     // Show success message
     alertMessage(`${this.product.Name} has been added to your cart!`);
-    
+
     // Visual feedback: animate badge
     const cartCountElem = document.getElementById("cart-count");
     if (cartCountElem) {
@@ -59,19 +60,26 @@ export default class ProductDetails {
     const prevButton = document.querySelector('.carousel-nav.prev');
     const nextButton = document.querySelector('.carousel-nav.next');
     let currentIndex = 0;
-    
+
     // Array of all images including the primary one
     const allImages = [
       this.product.Image || this.product.Images?.PrimaryLarge,
       ...(this.product.Images?.ExtraImages || [])
     ];
-    
+
     // Function to update the main image
     const updateMainImage = (index) => {
       // Update main image
-      mainImage.src = allImages[index];
-      mainImage.alt = `${this.product.Name} - View ${index + 1}`;
-      
+      if (index == 0) {
+
+        const primaryImage = this.product.Image || this.product.Images?.PrimaryLarge;
+        mainImage.src = primaryImage
+
+      } else {
+        mainImage.src = allImages[index].Src;
+        mainImage.alt = `${this.product.Name} - View ${index + 1}`;
+      }
+
       // Update active thumbnail
       thumbnails.forEach((thumb, i) => {
         if (i === index) {
@@ -80,22 +88,22 @@ export default class ProductDetails {
           thumb.classList.remove('active');
         }
       });
-      
+
       // Update current index
       currentIndex = index;
-      
+
       // Toggle navigation buttons based on current index
       if (prevButton) prevButton.disabled = currentIndex === 0;
       if (nextButton) nextButton.disabled = currentIndex === allImages.length - 1;
     };
-    
+
     // Add click event to thumbnails
     thumbnails.forEach((thumb, index) => {
       thumb.addEventListener('click', () => {
         updateMainImage(index);
       });
     });
-    
+
     // Navigation buttons
     if (prevButton) {
       prevButton.addEventListener('click', () => {
@@ -104,7 +112,7 @@ export default class ProductDetails {
         }
       });
     }
-    
+
     if (nextButton) {
       nextButton.addEventListener('click', () => {
         if (currentIndex < allImages.length - 1) {
@@ -112,7 +120,7 @@ export default class ProductDetails {
         }
       });
     }
-    
+
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft' && currentIndex > 0) {
@@ -123,40 +131,42 @@ export default class ProductDetails {
         updateMainImage(currentIndex + 1);
       }
     });
-    
+
     // Disable prev button initially if on first image
     if (prevButton) prevButton.disabled = currentIndex === 0;
     if (nextButton) nextButton.disabled = currentIndex === allImages.length - 1;
   }
 
   renderProductDetails() {
-    document.title = `Sleep Outside | ${this.product.Name}`; 
-    
+    document.title = `Sleep Outside | ${this.product.Name}`;
+
     // Check if product is discounted
     const isDiscounted = this.product.FinalPrice < this.product.SuggestedRetailPrice;
     let discountBadge = '';
     let discountPricing = '';
-    
+
     if (isDiscounted) {
       const discountPercentage = Math.round(((this.product.SuggestedRetailPrice - this.product.FinalPrice) / this.product.SuggestedRetailPrice) * 100);
       discountBadge = `<div class="discount-badge product-detail__discount">-${discountPercentage}%</div>`;
       discountPricing = `<p class="product-card__original-price">$${this.product.SuggestedRetailPrice.toFixed(2)}</p>`;
     }
-    
+
     // Check for extra images
     const hasExtraImages = this.product.Images?.ExtraImages && this.product.Images.ExtraImages.length > 0;
     const primaryImage = this.product.Image || this.product.Images?.PrimaryLarge;
-    
+
     // Create image carousel if extra images exist
     let imageSection = '';
     if (hasExtraImages) {
       const allImages = [primaryImage, ...this.product.Images.ExtraImages];
-      const thumbnails = allImages.map((img, index) => 
+      const thumbnails = allImages.map((img, index) =>
         `<button class="thumbnail ${index === 0 ? 'active' : ''}" data-index="${index}">
-          <img src="${img}" alt="${this.product.Name} - View ${index + 1}" />
+          <img src="${index === 0? primaryImage : img.Src}" alt="${this.product.Name} - View ${index + 1}" />
         </button>`
+
       ).join('');
-      
+
+
       imageSection = `
         <div class="product-carousel">
           ${discountBadge}
@@ -177,6 +187,7 @@ export default class ProductDetails {
             ${thumbnails}
           </div>
         </div>`;
+
     } else {
       // Single image display
       imageSection = `
@@ -185,7 +196,7 @@ export default class ProductDetails {
           <img class="divider" src="${primaryImage}" alt="${this.product.Name}" />
         </div>`;
     }
-    
+
     // Set the HTML for the product details
     document.querySelector("#product-detail").innerHTML = `
       <h3>${this.product.Category?.charAt(0).toUpperCase()}${this.product.Category?.slice(1) || 'Product'}</h3>
@@ -200,7 +211,7 @@ export default class ProductDetails {
       <div class="product-detail__add">
         <button id="addToCart" data-id="${this.product.Id}">Add to Cart</button>
       </div>`;
-      
+
     // Initialize carousel if there are extra images
     if (hasExtraImages) {
       this.initializeCarousel();
