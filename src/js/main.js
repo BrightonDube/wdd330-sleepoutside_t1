@@ -135,3 +135,7 @@ window.addEventListener("resize", function () {
     banner.style.padding = "15px";
   }
 });
+
+document.querySelector(".cta-button").addEventListener("click", function () {
+  window.location.href = "register.html"; // Redirects user to the registration page
+});

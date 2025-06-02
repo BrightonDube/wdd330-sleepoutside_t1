@@ -2177,6 +2177,37 @@ input {
   border: 1px solid #ccc;
 }
 
+.cta-container {
+    text-align: center; /* Centers the content */
+    margin-top: 20px;
+}
+
+.cta-container p {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.cta-button {
+    display: inline-block;
+    width: 120px;
+    height: 120px;
+    background-color: #ff5733; /* Eye-catching color */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    border-radius: 50%; /* Makes it perfectly round */
+    cursor: pointer;
+    line-height: 120px; /* Centers text vertically */
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #d84315; /* Darker shade on hover */
+}
+
 button {
   margin-top: 15px;
   padding: 10px;

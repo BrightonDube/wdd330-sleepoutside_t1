@@ -4,6 +4,12 @@ import { defineConfig } from "vite";
 export default defineConfig({
   root: "src/",
 
+  server: {
+    hmr: {
+      overlay: false, // Disables error overlay in HMR
+    },
+  },
+
   build: {
     outDir: "../dist",
     rollupOptions: {
