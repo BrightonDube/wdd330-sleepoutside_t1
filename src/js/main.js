@@ -124,14 +124,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   await displayFeaturedProducts();
 });
 
-window.addEventListener("resize", function() {
-    let banner = document.getElementById("cta-banner");
-    
-    if (window.innerWidth < 480) {
-        banner.style.padding = "8px";
-    } else if (window.innerWidth < 768) {
-        banner.style.padding = "10px";
-    } else {
-        banner.style.padding = "15px";
-    }
+window.addEventListener("resize", function () {
+  let banner = document.getElementById("cta-banner");
+
+  if (window.innerWidth < 480) {
+    banner.style.padding = "8px";
+  } else if (window.innerWidth < 768) {
+    banner.style.padding = "10px";
+  } else {
+    banner.style.padding = "15px";
+  }
 });

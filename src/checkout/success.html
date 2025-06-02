@@ -1,194 +1,204 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order Confirmed | Sleep Outside</title>
-  <link rel="stylesheet" href="../css/style.css">
-  <script src="../js/checkout.js" type="module"></script>
-  <script src="../js/order-success.js" type="module"></script>
-  <style>
-    .order-success {
-      text-align: center;
-      padding: 2rem;
-      max-width: 800px;
-      margin: 2rem auto;
-      background: #f8f9fa;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .success-icon {
-      font-size: 4rem;
-      color: #28a745;
-      margin-bottom: 1rem;
-    }
-    .order-details {
-      margin: 2rem 0;
-      padding: 1.5rem;
-      background: white;
-      border-radius: 6px;
-      text-align: left;
-    }
-    .btn-continue {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      background-color: #28a745;
-      color: white;
-      text-decoration: none;
-      border-radius: 4px;
-      font-weight: bold;
-      transition: background-color 0.3s;
-    }
-    .btn-continue:hover {
-      background-color: #218838;
-    }
-    .order-summary {
-      background: white;
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin: 2rem 0;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    
-    .order-items {
-      margin-bottom: 1.5rem;
-    }
-    
-    .order-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid #eee;
-    }
-    
-    .order-item:last-child {
-      border-bottom: none;
-    }
-    
-    .item-name {
-      flex: 2;
-      font-weight: 500;
-    }
-    
-    .item-quantity {
-      color: #666;
-      margin: 0 1rem;
-    }
-    
-    .item-price {
-      font-weight: 600;
-    }
-    
-    .price-row {
-      display: flex;
-      justify-content: space-between;
-      margin: 0.5rem 0;
-    }
-    
-    .price-row.total {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 2px solid #eee;
-      font-size: 1.1rem;
-    }
-    
-    .shipping-info {
-      background: white;
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin: 2rem 0;
-      text-align: left;
-    }
-    
-    .shipping-info h2 {
-      margin-top: 0;
-      color: #333;
-    }
-    
-    .order-number {
-      font-size: 1.1rem;
-      color: #666;
-      margin: 0.5rem 0 1.5rem;
-    }
-  </style>
-</head>
-<body>
-  <header class="divider" id="header"></header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Confirmed | Sleep Outside</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="../js/checkout.js" type="module"></script>
+    <script src="../js/order-success.js" type="module"></script>
+    <style>
+      .order-success {
+        text-align: center;
+        padding: 2rem;
+        max-width: 800px;
+        margin: 2rem auto;
+        background: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .success-icon {
+        font-size: 4rem;
+        color: #28a745;
+        margin-bottom: 1rem;
+      }
+      .order-details {
+        margin: 2rem 0;
+        padding: 1.5rem;
+        background: white;
+        border-radius: 6px;
+        text-align: left;
+      }
+      .btn-continue {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: background-color 0.3s;
+      }
+      .btn-continue:hover {
+        background-color: #218838;
+      }
+      .order-summary {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
 
-  <main class="divider">
-    <div class="order-success">
-      <div class="success-icon">✓</div>
-      <h1>Order Confirmed!</h1>
-      <p class="order-number">Order #<span id="orderNumber"></span></p>
-      <p>Thank you for your purchase! We've received your order and will process it shortly.</p>
-      
-      <div class="order-summary">
-        <h2>Order Summary</h2>
-        <div class="order-items" id="orderItems">
-          <!-- Order items will be inserted here by JavaScript -->
-        </div>
-        <div class="order-totals">
-          <div class="price-row">
-            <span>Subtotal:</span>
-            <span id="subtotal">$0.00</span>
-          </div>
-          <div class="price-row">
-            <span>Shipping:</span>
-            <span id="shipping">$0.00</span>
-          </div>
-          <div class="price-row">
-            <span>Tax:</span>
-            <span id="tax">$0.00</span>
-          </div>
-          <div class="price-row total">
-            <strong>Total:</strong>
-            <strong id="orderTotal">$0.00</strong>
-          </div>
-        </div>
-      </div>
-      
-      <div class="shipping-info">
-        <h2>Shipping Information</h2>
-        <div id="shippingAddress">
-          <!-- Shipping address will be inserted here by JavaScript -->
-        </div>
-      </div>
-      <h1>Order Confirmed!</h1>
-      <p>Thank you for your purchase. Your order has been received and is being processed.</p>
-      
-      <div class="order-details">
-        <h3>Order Details</h3>
-        <p><strong>Order Number:</strong> <span id="orderNumber"></span></p>
-        <p><strong>Date:</strong> <span id="orderDate"></span></p>
-        <p>You will receive an email confirmation shortly with your order details.</p>
-      </div>
-      
-      <a href="../index.html" class="btn-continue">Continue Shopping</a>
-    </div>
-  </main>
+      .order-items {
+        margin-bottom: 1.5rem;
+      }
 
-  <footer id="footer"></footer>
+      .order-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #eee;
+      }
 
-  <script>
-    // Display order details from URL parameters
-    document.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const orderNumber = urlParams.get('order') || 'N/A';
-      
-      document.getElementById('orderNumber').textContent = orderNumber;
-      document.getElementById('orderDate').textContent = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+      .order-item:last-child {
+        border-bottom: none;
+      }
+
+      .item-name {
+        flex: 2;
+        font-weight: 500;
+      }
+
+      .item-quantity {
+        color: #666;
+        margin: 0 1rem;
+      }
+
+      .item-price {
+        font-weight: 600;
+      }
+
+      .price-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.5rem 0;
+      }
+
+      .price-row.total {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 2px solid #eee;
+        font-size: 1.1rem;
+      }
+
+      .shipping-info {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        text-align: left;
+      }
+
+      .shipping-info h2 {
+        margin-top: 0;
+        color: #333;
+      }
+
+      .order-number {
+        font-size: 1.1rem;
+        color: #666;
+        margin: 0.5rem 0 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="divider" id="header"></header>
+
+    <main class="divider">
+      <div class="order-success">
+        <div class="success-icon">✓</div>
+        <h1>Order Confirmed!</h1>
+        <p class="order-number">Order #<span id="orderNumber"></span></p>
+        <p>
+          Thank you for your purchase! We've received your order and will
+          process it shortly.
+        </p>
+
+        <div class="order-summary">
+          <h2>Order Summary</h2>
+          <div class="order-items" id="orderItems">
+            <!-- Order items will be inserted here by JavaScript -->
+          </div>
+          <div class="order-totals">
+            <div class="price-row">
+              <span>Subtotal:</span>
+              <span id="subtotal">$0.00</span>
+            </div>
+            <div class="price-row">
+              <span>Shipping:</span>
+              <span id="shipping">$0.00</span>
+            </div>
+            <div class="price-row">
+              <span>Tax:</span>
+              <span id="tax">$0.00</span>
+            </div>
+            <div class="price-row total">
+              <strong>Total:</strong>
+              <strong id="orderTotal">$0.00</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="shipping-info">
+          <h2>Shipping Information</h2>
+          <div id="shippingAddress">
+            <!-- Shipping address will be inserted here by JavaScript -->
+          </div>
+        </div>
+        <h1>Order Confirmed!</h1>
+        <p>
+          Thank you for your purchase. Your order has been received and is being
+          processed.
+        </p>
+
+        <div class="order-details">
+          <h3>Order Details</h3>
+          <p><strong>Order Number:</strong> <span id="orderNumber"></span></p>
+          <p><strong>Date:</strong> <span id="orderDate"></span></p>
+          <p>
+            You will receive an email confirmation shortly with your order
+            details.
+          </p>
+        </div>
+
+        <a href="../index.html" class="btn-continue">Continue Shopping</a>
+      </div>
+    </main>
+
+    <footer id="footer"></footer>
+
+    <script>
+      // Display order details from URL parameters
+      document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderNumber = urlParams.get("order") || "N/A";
+
+        document.getElementById("orderNumber").textContent = orderNumber;
+        document.getElementById("orderDate").textContent =
+          new Date().toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+
+        // Load header and footer
+        Promise.all([
+          import("../js/utils.mjs").then((module) => module.loadHeaderFooter()),
+        ]).catch((error) => {
+          console.error("Error loading components:", error);
+        });
       });
-      
-      // Load header and footer
-      Promise.all([
-        import('../js/utils.mjs').then(module => module.loadHeaderFooter())
-      ]).catch(error => {
-        console.error('Error loading components:', error);
-      });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
