@@ -25,3 +25,21 @@ window.addEventListener("DOMContentLoaded", async () => {
       `<p>Error loading product. Please try again later.</p>`;
   }
 });
+
+document
+  .getElementById("commentForm")
+  .addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent page reload
+
+    let commentText = document.getElementById("commentText").value;
+
+    if (commentText.trim() !== "") {
+      let commentContainer = document.createElement("div");
+      commentContainer.classList.add("comment");
+      commentContainer.textContent = commentText;
+
+      document.getElementById("comments-list").appendChild(commentContainer);
+
+      document.getElementById("commentText").value = ""; // Clear textarea
+    }
+  });

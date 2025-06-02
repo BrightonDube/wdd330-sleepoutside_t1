@@ -448,7 +448,7 @@ button {
 }
 
 .products h2::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -473,8 +473,10 @@ button {
   margin-bottom: 1rem;
   background: white;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   position: relative;
 }
 
@@ -564,18 +566,9 @@ button {
   transition: all 0.2s ease;
 }
 
-<<<<<<< HEAD
-.remove-from-cart img {
-  width: 20px;
-  height: 20px;
-  vertical-align: middle;
-  filter: invert(19%) sepia(67%) saturate(1162%) hue-rotate(7deg)
-    brightness(97%) contrast(97%);
-=======
 .quantity-btn:hover {
   background: #f0f0f0;
   border-color: #ccc;
->>>>>>> 326b2423b1376fd94236ace3c0bae01eb24830e9
 }
 
 .quantity-btn:active {
@@ -603,10 +596,6 @@ button {
 
 .price-details {
   display: flex;
-<<<<<<< HEAD
-  justify-content: flex-end;
-  margin: 20px;
-=======
   flex-direction: column;
   gap: 0.25rem;
 }
@@ -620,17 +609,7 @@ button {
   font-weight: 600;
   color: #2c3e50;
   font-size: 1.1rem;
->>>>>>> 326b2423b1376fd94236ace3c0bae01eb24830e9
 }
-
-.cart-total {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  margin-top: 1.5rem;
-}
-
 .price-row {
   display: flex;
   justify-content: space-between;
@@ -669,12 +648,14 @@ button {
 .remove-from-cart img {
   width: 16px;
   height: 16px;
-  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(325deg) brightness(102%) contrast(89%);
+  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(325deg)
+    brightness(102%) contrast(89%);
   transition: filter 0.2s ease;
 }
 
 .remove-from-cart:hover img {
-  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%)
+    contrast(100%);
 }
 
 /* Cart Footer */
@@ -740,7 +721,7 @@ button {
 }
 
 .empty-cart-message::before {
-  content: '🛒';
+  content: "🛒";
   font-size: 3rem;
   display: block;
   margin-bottom: 1rem;
@@ -785,7 +766,9 @@ button {
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
 }
 
 .loading-overlay.active {
@@ -804,19 +787,39 @@ button {
 
 /* Animations */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-10px); }
-  60% { transform: translateY(-5px); }
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
 }
 
 /* Responsive Adjustments */
@@ -826,17 +829,17 @@ button {
     text-align: left;
     padding: 1rem;
   }
-  
+
   .cart-card__info {
     padding: 0 1rem;
   }
-  
+
   .cart-footer {
     flex-direction: column;
     gap: 1.5rem;
     text-align: center;
   }
-  
+
   .checkout {
     width: 100%;
     padding: 0.8rem;
@@ -848,18 +851,18 @@ button {
     grid-template-columns: 80px 1fr;
     grid-template-rows: auto auto;
   }
-  
+
   .remove-from-cart {
     grid-column: 2;
     justify-self: end;
     margin-top: 0.5rem;
   }
-  
+
   .cart-card__info {
     grid-row: 1;
     grid-column: 2;
   }
-  
+
   .cart-card__image {
     grid-row: span 2;
     height: 100px;
@@ -1066,7 +1069,7 @@ main button.checkout:hover a {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1.5rem;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
 /* Page Title */
@@ -1078,86 +1081,30 @@ main button.checkout:hover a {
   font-weight: 700;
   position: relative;
   padding-bottom: 1rem;
-  font-family: 'Roboto Condensed', sans-serif;
-  letter-spacing: 0.5px;
-}
+  font-family: "Roboto Condensed", sans-serif;
+  .checkout h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 3rem;
+    font-size: 2.2rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 1rem;
+    font-family: "Roboto Condensed", sans-serif;
+    letter-spacing: 0.5px;
+  }
 
-<<<<<<< HEAD
-.checkout main h2::after {
-  content: "";
-=======
-.checkout h2::after {
-  content: '';
->>>>>>> 326b2423b1376fd94236ace3c0bae01eb24830e9
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary-color), #e67e22);
-  border-radius: 2px;
-}
-
-<<<<<<< HEAD
-.checkout-form h2 {
-  color: var(--tertiary-color);
-  margin-bottom: 1.5rem;
-  text-align: center;
-  font-size: 1.8rem;
-  position: relative;
-  padding-bottom: 0.5rem;
-}
-
-.checkout-form h2::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 3px;
-  background: var(--primary-color);
-  border-radius: 3px;
-}
-
-.checkout-form p {
-  margin-bottom: 1.5rem;
-  text-align: center;
-  color: var(--dark-grey);
-}
-
-.checkout-form form {
-=======
-/* Form Layout */
-.checkout-form {
->>>>>>> 326b2423b1376fd94236ace3c0bae01eb24830e9
-  display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: 2.5rem;
-  margin-top: 2rem;
-}
-
-/* Form Sections */
-.checkout-form form {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-/* Fieldset Styling */
-.checkout-form fieldset {
-  border: none;
-  border-radius: 10px;
-  padding: 2rem;
-  margin: 0;
-  background: #fff;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
-  position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.checkout-form fieldset:hover {
+  .checkout h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), #e67e22);
+    border-radius: 2px;
+  }
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
@@ -1175,7 +1122,7 @@ main button.checkout:hover a {
 }
 
 .checkout-form legend::before {
-  content: '';
+  content: "";
   display: inline-block;
   width: 8px;
   height: 20px;
@@ -1200,7 +1147,7 @@ main button.checkout:hover a {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  
+
   .checkout-summary {
     order: -1;
   }
@@ -1211,18 +1158,18 @@ main button.checkout:hover a {
     font-size: 1.8rem;
     margin-bottom: 2rem;
   }
-  
+
   .checkout-form legend {
     font-size: 1.2rem;
   }
-  
+
   .checkout__name,
   .checkout__address,
   .checkout__payment {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .order__summary {
     grid-template-columns: 1fr auto;
     gap: 0.8rem 1.5rem;
@@ -1328,7 +1275,9 @@ main button.checkout:hover a {
   display: none;
 }
 
-.checkout-form input:invalid:not(:focus):not(:placeholder-shown) + .error-message {
+.checkout-form
+  input:invalid:not(:focus):not(:placeholder-shown)
+  + .error-message {
   display: block;
 }
 
@@ -1342,7 +1291,9 @@ main button.checkout:hover a {
   padding: 2rem;
   height: fit-content;
   border: 1px solid #eee;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .checkout-summary:hover {
@@ -1361,8 +1312,8 @@ main button.checkout:hover a {
 }
 
 .checkout-summary h3::before {
-  content: '\f291';
-  font-family: 'Font Awesome 5 Free';
+  content: "\f291";
+  font-family: "Font Awesome 5 Free";
   font-weight: 900;
   margin-right: 10px;
   color: var(--primary-color);
@@ -1389,7 +1340,7 @@ main button.checkout:hover a {
 }
 
 #checkoutSubmit::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1443,7 +1394,7 @@ main button.checkout:hover a {
 }
 
 .checkout-form .loading::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -1578,7 +1529,7 @@ button.processing {
 }
 
 button.processing::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1592,7 +1543,9 @@ button.processing::after {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .zip-message {
@@ -2098,53 +2051,53 @@ button.processing::after {
 }
 
 .banner {
-    position: relative;
-    margin-left: 25%;
-    top: 0;
-    width: 50%;
-    background-color: #ece2ba;
-    color: #333;
-    text-align: center;
-    padding: 15px;
-    font-size: 18px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  position: relative;
+  margin-left: 25%;
+  top: 0;
+  width: 50%;
+  background-color: #ece2ba;
+  color: #333;
+  text-align: center;
+  padding: 15px;
+  font-size: 18px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 #register-btn {
-    background-color: #ff5733;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
+  background-color: #ff5733;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 /* Responsive Styles */
 @media screen and (max-width: 768px) {
-    .banner {
-        padding: 10px;
-        font-size: 16px;
-    }
-    
-    #register-btn {
-        padding: 8px 15px;
-        font-size: 14px;
-    }
+  .banner {
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  #register-btn {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
 }
 
 @media screen and (max-width: 480px) {
-    .banner {
-        padding: 8px;
-        font-size: 14px;
-    }
-    
-    #register-btn {
-        padding: 6px 12px;
-        font-size: 12px;
-    }
+  .banner {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  #register-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
 }
 
-/* New customer registration */ 
+/* New customer registration */
 body {
   font-family: Arial, sans-serif;
   display: flex;
@@ -2178,40 +2131,40 @@ input {
 }
 
 .cta-container {
-    text-align: center; /* Centers the content */
-    margin-top: 20px;
+  text-align: center; /* Centers the content */
+  margin-top: 20px;
 }
 
 .cta-container p {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .cta-button {
-    display: inline-block;
-    width: 120px;
-    height: 120px;
-    background-color: #ff5733; /* Eye-catching color */
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    border: none;
-    border-radius: 50%; /* Makes it perfectly round */
-    cursor: pointer;
-    line-height: 120px; /* Centers text vertically */
-    transition: all 0.3s ease;
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  background-color: #ff5733; /* Eye-catching color */
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  border-radius: 50%; /* Makes it perfectly round */
+  cursor: pointer;
+  line-height: 120px; /* Centers text vertically */
+  transition: all 0.3s ease;
 }
 
 .cta-button:hover {
-    background-color: #d84315; /* Darker shade on hover */
+  background-color: #d84315; /* Darker shade on hover */
 }
 
 button {
   margin-top: 15px;
   padding: 10px;
-  background-color: #007BFF;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
@@ -2220,4 +2173,49 @@ button {
 
 button:hover {
   background-color: #0056b3;
+}
+
+.comments-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 15px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+#comments-list {
+  margin-bottom: 15px;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+}
+
+.comment {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+textarea {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  resize: none;
+}
+
+button {
+  margin-top: 10px;
+  background: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background: #0056b3;
 }
