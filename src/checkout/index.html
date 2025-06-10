@@ -1,106 +1,154 @@
 <!doctype html>
 
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sleep Outside | Checkout</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="../js/checkout.js" type="module"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sleep Outside | Checkout</title>
-  <link rel="stylesheet" href="../css/style.css">
-  <script src="../js/checkout.js" type="module"></script>
-</head>
+  <body>
+    <header class="divider" id="header"></header>
 
-<body>
-  <header class="divider" id="header"></header>
+    <main class="divider checkout">
+      <h2>Review & Place your Order</h2>
+      <section class="checkout-form">
+        <form name="checkout">
+          <input type="hidden" name="orderDate" id="orderDate" />
 
-  <main class="divider checkout">
-    <h2>Review & Place your Order</h2>
-    <section class="checkout-form">
-      <form name="checkout">
-        <input type="hidden" name="orderDate" id="orderDate">
+          <fieldset>
+            <legend>Contact Information</legend>
+            <div class="checkout__name">
+              <label for="fname">First Name</label>
+              <input
+                type="text"
+                name="fname"
+                id="fname"
+                required
+                minlength="2"
+                maxlength="50"
+                pattern="[A-Za-z\s\-']+"
+                title="Please enter a valid first name (letters, spaces, hyphens, and apostrophes only)"
+              />
+              <label for="lname">Last Name</label>
+              <input
+                type="text"
+                name="lname"
+                id="lname"
+                required
+                minlength="2"
+                maxlength="50"
+                pattern="[A-Za-z\s\-']+"
+                title="Please enter a valid last name (letters, spaces, hyphens, and apostrophes only)"
+              />
+            </div>
+            <div class="checkout__address">
+              <label for="street">Street Address</label>
+              <input
+                type="text"
+                name="street"
+                id="street"
+                required
+                minlength="5"
+                maxlength="100"
+                pattern=".*[0-9].*"
+                title="Please include a street number"
+              />
+              <label for="city">City</label>
+              <input
+                type="text"
+                name="city"
+                id="city"
+                required
+                minlength="2"
+                maxlength="50"
+                pattern="[A-Za-z\s\-']+"
+                title="Please enter a valid city name"
+              />
+              <label for="state">State</label>
+              <input
+                type="text"
+                name="state"
+                id="state"
+                required
+                pattern="[A-Za-z]{2}"
+                title="Please enter a 2-letter state code"
+                placeholder="UT"
+                maxlength="2"
+                style="text-transform: uppercase"
+              />
+              <label for="zip">ZIP Code</label>
+              <input
+                type="text"
+                name="zip"
+                id="zip"
+                required
+                pattern="^\d{5}(-\d{4})?$"
+                title="Please enter a valid ZIP code (e.g., 12345 or 12345-6789)"
+                placeholder="12345"
+              />
+              <div id="zip-message" class="zip-message"></div>
+            </div>
+          </fieldset>
 
-        <fieldset>
-          <legend>Contact Information</legend>
-          <div class="checkout__name">
-            <label for="fname">First Name</label>
-            <input type="text" name="fname" id="fname" required 
-                   minlength="2" maxlength="50" 
-                   pattern="[A-Za-z\s\-']+" 
-                   title="Please enter a valid first name (letters, spaces, hyphens, and apostrophes only)">
-            <label for="lname">Last Name</label>
-            <input type="text" name="lname" id="lname" required
-                   minlength="2" maxlength="50"
-                   pattern="[A-Za-z\s\-']+"
-                   title="Please enter a valid last name (letters, spaces, hyphens, and apostrophes only)">
-          </div>
-          <div class="checkout__address">
-            <label for="street">Street Address</label>
-            <input type="text" name="street" id="street" required
-                   minlength="5" maxlength="100"
-                   pattern=".*[0-9].*"
-                   title="Please include a street number">
-            <label for="city">City</label>
-            <input type="text" name="city" id="city" required
-                   minlength="2" maxlength="50"
-                   pattern="[A-Za-z\s\-']+"
-                   title="Please enter a valid city name">
-            <label for="state">State</label>
-            <input type="text" name="state" id="state" required
-                   pattern="[A-Za-z]{2}"
-                   title="Please enter a 2-letter state code"
-                   placeholder="UT" maxlength="2" style="text-transform: uppercase;">
-            <label for="zip">ZIP Code</label>
-            <input type="text" name="zip" id="zip" required
-                   pattern="^\d{5}(-\d{4})?$"
-                   title="Please enter a valid ZIP code (e.g., 12345 or 12345-6789)"
-                   placeholder="12345">
-            <div id="zip-message" class="zip-message"></div>
-          </div>
-        </fieldset>
+          <fieldset>
+            <legend>Payment</legend>
+            <div class="checkout__payment">
+              <label for="cardNumber">Card Number</label>
+              <input
+                type="text"
+                name="cardNumber"
+                id="cardNumber"
+                required
+                pattern="[\d\s]{13,19}"
+                title="Please enter a valid credit card number (13-19 digits)"
+                placeholder="1234 5678 9012 3456"
+              />
+              <label for="expiration">Expiration (MM/YY)</label>
+              <input
+                type="text"
+                name="expiration"
+                id="expiration"
+                required
+                pattern="(0[1-9]|1[0-2])\/([0-9]{2})"
+                title="Please enter a valid expiration date (MM/YY)"
+                placeholder="MM/YY"
+              />
+              <label for="code">Security Code (CVV)</label>
+              <input
+                type="text"
+                name="code"
+                id="code"
+                required
+                pattern="\d{3,4}"
+                title="Please enter a 3 or 4 digit security code"
+                placeholder="123"
+              />
+            </div>
+          </fieldset>
 
-        <fieldset>
-          <legend>Payment</legend>
-          <div class="checkout__payment">
-            <label for="cardNumber">Card Number</label>
-            <input type="text" name="cardNumber" id="cardNumber" required
-                   pattern="[\d\s]{13,19}"
-                   title="Please enter a valid credit card number (13-19 digits)"
-                   placeholder="1234 5678 9012 3456">
-            <label for="expiration">Expiration (MM/YY)</label>
-            <input type="text" name="expiration" id="expiration" required
-                   pattern="(0[1-9]|1[0-2])\/([0-9]{2})"
-                   title="Please enter a valid expiration date (MM/YY)"
-                   placeholder="MM/YY">
-            <label for="code">Security Code (CVV)</label>
-            <input type="text" name="code" id="code" required
-                   pattern="\d{3,4}"
-                   title="Please enter a 3 or 4 digit security code"
-                   placeholder="123">
-          </div>
-        </fieldset>
+          <fieldset class="checkout-summary">
+            <legend>Order Summary</legend>
+            <div class="order__summary">
+              <div>Items</div>
+              <div id="num-items"></div>
+              <div>Subtotal</div>
+              <div id="cartTotal"></div>
+              <div>Tax</div>
+              <div id="tax"></div>
+              <div>Shipping</div>
+              <div id="shipping"></div>
+              <div>Total</div>
+              <div id="orderTotal"></div>
+            </div>
+          </fieldset>
+          <button type="submit" id="checkoutSubmit">Checkout</button>
+        </form>
+      </section>
+    </main>
 
-        <fieldset class="checkout-summary">
-          <legend>Order Summary</legend>
-
-          <div class="order__summary">
-            <div>Items</div>
-            <div id="num-items"></div>
-            <div>Subtotal</div>
-            <div id="cartTotal"></div>
-            <div>Tax</div>
-            <div id="tax"></div>
-            <div>Shipping</div>
-            <div id="shipping"></div>
-            <div>Total</div>
-            <div id="orderTotal"></div>
-          </div>
-        </fieldset>
-        <button type="submit" id="checkoutSubmit">Checkout</button>
-      </form>
-    </section>
-  </main>
-
-  <footer id="footer"></footer>
-</body>
-
+    <footer id="footer"></footer>
+  </body>
 </html>

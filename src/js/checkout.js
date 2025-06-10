@@ -82,18 +82,18 @@ const formFields = {
 async function initCheckout() {
   try {
     // Set the order date to today
-    document.getElementById('orderDate').value = new Date().toISOString();
-    
+    document.getElementById("orderDate").value = new Date().toISOString();
+
     // Load header and footer first
     await loadHeaderFooter();
-    
+
     // Update cart count
     await updateCartCount();
-    
+
     // Initialize the checkout process
-    checkout = new CheckoutProcess('so-cart', '.checkout-summary');
+    checkout = new CheckoutProcess("so-cart", ".checkout-summary");
     checkout.init();
-    
+
     // Prefill form with test data (development only)
     if (import.meta.env.MODE === 'development') {
       fillTestData();
@@ -357,17 +357,17 @@ async function handleSubmit(event) {
     submitButton.textContent = 'Processing...';
     submitButton.classList.add('processing');
   }
-  
+
   try {
     // Make sure the final calculations are done
     checkout.calculateOrderTotal();
-    
+
     // Prepare and validate the order using CheckoutProcess methods
     const order = await checkout.checkout(form);
-    
+
     // Log the order data for debugging
-    console.log('Order data being submitted:', order);
-    
+    console.log("Order data being submitted:", order);
+
     // Additional validations if needed
     if (!order.items || order.items.length === 0) {
       throw { 
@@ -381,7 +381,7 @@ async function handleSubmit(event) {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Submit the order using ExternalServices
-    console.log('Submitting order to server...');
+    console.log("Submitting order to server...");
     const result = await externalServices.submitOrder(order);
 
     // Log the result for debugging
@@ -471,7 +471,7 @@ async function handleSubmit(event) {
       submitButton.textContent = originalButtonText;
       submitButton.classList.remove('processing');
     }
-    
+
     // Log the error details for debugging
     console.error('Order submission failed with error:', error);
     if (error.details) {
@@ -485,17 +485,17 @@ async function handleSubmit(event) {
 // Prefill form with test data (for development only)
 function fillTestData() {
   const testData = {
-    'fname': 'Test',
-    'lname': 'User',
-    'street': '123 Test St',
-    'city': 'Testville',
-    'state': 'UT',
-    'zip': '84604',
-    'cardNumber': '1234123412341234', // Test card number
-    'expiration': '12/30', // Future date
-    'code': '123' // 3-digit CVV
+    fname: "Test",
+    lname: "User",
+    street: "123 Test St",
+    city: "Testville",
+    state: "UT",
+    zip: "84604",
+    cardNumber: "1234123412341234", // Test card number
+    expiration: "12/30", // Future date
+    code: "123", // 3-digit CVV
   };
-  
+
   // Fill in the form fields
   Object.entries(testData).forEach(([id, value]) => {
     const element = document.getElementById(id);
@@ -505,9 +505,9 @@ function fillTestData() {
       element.dispatchEvent(new Event('blur'));
     }
   });
-  
-  console.log('Form prefilled with test data');
+
+  console.log("Form prefilled with test data");
 }
 
 // Initialize the page when DOM is fully loaded
-document.addEventListener('DOMContentLoaded', initCheckout);
+document.addEventListener("DOMContentLoaded", initCheckout);

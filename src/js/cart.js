@@ -1,4 +1,9 @@
-import { getLocalStorage, setLocalStorage, loadHeaderFooter, updateCartCount } from "./utils.mjs";
+import {
+  getLocalStorage,
+  setLocalStorage,
+  loadHeaderFooter,
+  updateCartCount,
+} from "./utils.mjs";
 loadHeaderFooter();
 
 // New addToCart method
@@ -111,12 +116,12 @@ function renderCartContents() {
     // Make sure checkout button is visible when there are items
     checkoutButton.style.display = 'inline-block';
   }
-  
+
   // If we have items, render them
   try {
     const htmlItems = cartItems.map((item) => cartItemTemplate(item));
     productListElement.innerHTML = htmlItems.join("");
-    
+
     // Calculate and show the total price
     totalPrice(cartItems);
     
@@ -174,7 +179,7 @@ function renderCartContents() {
       }
     });
   } catch (error) {
-    console.error('Error rendering cart contents:', error);
+    console.error("Error rendering cart contents:", error);
     productListElement.innerHTML = `<li class="empty-cart-message">There was a problem displaying your cart</li>`;
     cartTotalElement.innerHTML = `<p>Total: $0.00</p>`;
   }
@@ -269,7 +274,7 @@ async function initCart() {
   try {
     // Load header and footer first
     await loadHeaderFooter();
-    
+
     // Then update cart count (badge will now exist in DOM)
     await updateCartCount();
     
